@@ -21,10 +21,10 @@ clear; close all;
 animal = 7;             
 day = 190214;
 files = {1};  
-probeChannels = {1:32}; 
-brainReg = {''}; 
-animalID = '';
-rawdatadir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\'; 
+probeChannels = {33:64}; 
+brainReg = {'CA1'}; 
+animalID = 'A';
+rawdatadir = 'Y:\singer\RawData\Flicker_CA1CA3\'; 
 clusterdir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\';
 clusfolder = 'sorted\';
 
@@ -52,7 +52,7 @@ if getSingleUnitTimes
         anrawdatadir = [rawdatadir, animalID, num2str(animal(d)), '_', num2str(day(d)), '\'];
         anclusterdir = [clusterdir, animalID, num2str(animal(d)), '_', num2str(day(d)), '\'];
         
-        makeClusterStructure(anrawdatadir, anclusterdir, files{d}, probeChannels, brainReg, clusfolder)
+        makeClusterStructure(anclusterdir, files{d}, brainReg, clusfolder)
     end
 end
 
@@ -69,6 +69,15 @@ end
 % params.samprate = 20000; 
 
 % wf = getWaveForms(params); 
+
+if getWFstruct
+    for d = 1:length(day)
+        anrawdatadir = [rawdatadir, animalID, num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anclusterdir = [clusterdir, animalID, num2str(animal(d)), '_', num2str(day(d)), '\'];
+        
+        getWaveForms_K2(anrawdatadir, anclusterdir, files{d}, probeChannels, brainReg, clusfolder)
+    end
+end
 
 %% apply quality metrics - will be incorporated
 

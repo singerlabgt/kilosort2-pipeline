@@ -56,15 +56,15 @@ for j = 1:numRecs
         fwrite(f1,probedata,dtype);
         fclose(f1);    
         
-        recLength = size(data{1},2); 
+        recLength(j) = recLength(j)+size(data{1},2); 
         clear probedata
     end
 end
 
 props.recLength = recLength;
 props.sampRate = 20000;
-props.fileNums = fileNums;
+props.fileNums = filenum;
 
 %save properties for fixing spike times after sorting
-save([targetdir, 'sortingprops.mat'], 'props')
+save([targetpath, 'sortingprops.mat'], 'props')
 end

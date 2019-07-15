@@ -23,7 +23,7 @@ for p = 1:length(probes)
         disp('Intan files detected.')
         perRegDir = fullfile(clusterdir, brainreg{p}, clusfolder);
         if ~exist(perRegDir, 'dir'); mkdir(perRegDir); end
-        RHDtoBIN_K2(rawdatadir, perRegDir, 'int16', files.intan.name,...
+        RHDtoBIN_K2(rawdatadir, perRegDir, 'int16', ...
             files.nums, probes{p})
     elseif ~isempty(files.spikegadgets)
         disp('Spike Gadgets files detected.')

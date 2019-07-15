@@ -13,8 +13,7 @@ for br = 1:length(brainReg)
     spikeTemplates = readNPY([anclusterdir, 'spike_templates.npy']);
     channelMap = readNPY([anclusterdir, 'channel_map.npy']);
     params = loadParamsPy([anclusterdir, 'params.py']);
-%     load([anclusterdir, 'sortingprops.mat'], props)
-    props.recLength = [60*20000 60*20000 60*20000];
+    load([anclusterdir, 'sortingprops.mat'], 'props')
 
     %only units classified as "good"
     goodUnits = clusterID(clusterGroup == 2);
@@ -42,13 +41,14 @@ for br = 1:length(brainReg)
                 tempSpikeInds{clu} = spikeInds(spikeID == goodUnits(clu));
                 tempSpikeInds{clu} = double(tempSpikeInds{clu});
             else
+                tempSpikeInds{clu} = tempSpikeInds{clu} - elapsedLength; 
                 clusters(clu).spikeInds = [];
             end
             
-            clusters(clu).spikeInds = tempSpikeInds{clu}(tempSpikeInds{clu} <= f*props.recLength(f))-elapsedLength;
+            clusters(clu).spikeInds = tempSpikeInds{clu}(tempSpikeInds{clu} <= props.recLength(f));
             
             if f < length(files)
-                tempSpikeInds{clu} = tempSpikeInds{clu}(tempSpikeInds{clu} > f*props.recLength(f));
+                tempSpikeInds{clu} = tempSpikeInds{clu}(tempSpikeInds{clu} > props.recLength(f));
             end
             clusters(clu).file = files(f);
         end
