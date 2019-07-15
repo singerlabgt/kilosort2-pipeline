@@ -53,7 +53,7 @@ if getSingleUnitTimes
     end
 end
 
-%% get waveforms
+%% get waveforms - will be incorporated
 
 % params.dataDir = anclusterdir;
 % params.fileName = 'allrecordings.bin'; 
@@ -67,7 +67,7 @@ end
 
 % wf = getWaveForms(params); 
 
-%% apply quality metrics 
+%% apply quality metrics - will be incorporated
 
 % %getSNR
 % datPars.nCh = 32;
