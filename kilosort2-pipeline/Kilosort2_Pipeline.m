@@ -22,8 +22,10 @@ day = 190214;
 files = {1};  
 probeChannels = {1:32}; 
 brainReg = {''}; 
+animalID = '';
 rawdatadir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\'; 
 clusterdir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\';
+clusfolder = 'sorted\';
 
 %% Set run options
 
@@ -34,11 +36,11 @@ getSingleUnitTimes = 1;
 
 if writeToBIN
     for d = 1:length(day)
-        anrawdatadir = [rawdatadir, 'A', num2str(animal(d)), '_', num2str(day(d)), '\'];
-        anclusterdir = [clusterdir, 'A', num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anrawdatadir = [rawdatadir, animalID, num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anclusterdir = [clusterdir, animalID, num2str(animal(d)), '_', num2str(day(d)), '\'];
         
         if ~exist(anclusterdir, 'dir'); mkdir(anclusterdir); end
-        converttoBIN_K2(anrawdatadir, anclusterdir, files{d}, probeChannels, brainReg)
+        converttoBIN_K2(anrawdatadir, anclusterdir, files{d}, probeChannels, brainReg, clusfolder)
     end
 end
 
@@ -46,10 +48,10 @@ end
 
 if getSingleUnitTimes
     for d = 1:length(day)
-        anrawdatadir = [rawdatadir, 'A', num2str(animal(d)), '_', num2str(day(d)), '\'];
-        anclusterdir = [clusterdir, 'A', num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anrawdatadir = [rawdatadir, animalID, num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anclusterdir = [clusterdir, animalID, num2str(animal(d)), '_', num2str(day(d)), '\'];
         
-        makeClusterStructure(anrawdatadir, anclusterdir, files{d}, probeChannels, brainReg)
+        makeClusterStructure(anrawdatadir, anclusterdir, files{d}, probeChannels, brainReg, clusfolder)
     end
 end
 

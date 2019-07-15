@@ -1,11 +1,10 @@
-function makeClusterStructure(rawdatadir, clusterdir, files,...
-    probeChannels, brainReg)
+function makeClusterStructure(clusterdir, files, brainReg, clusfolder)
 % makeClusterStructure Make post curation data structure for Kilosort2.
 %   ALP 7/14/19
 
 for br = 1:length(brainReg)
-    anclusterdir = [clusterdir, brainReg{br}];
-    
+    anclusterdir = fullfile(clusterdir, brainReg{br}, clusfolder);
+
     %read clustered information
     spikeInds = readNPY([anclusterdir, 'spike_times.npy']); %in indices
     spikeID = readNPY([anclusterdir, 'spike_clusters.npy']);
