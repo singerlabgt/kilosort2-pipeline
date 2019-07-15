@@ -12,7 +12,8 @@ clear; close all;
 % Animal and day should be 1xN vect of same length. Files
 % should be cell array with each element containing vect of desired files.
 % probe channels should be cell array of same length as brainReg, with each
-% element containing channels of desired region. 
+% element containing channels of desired region. brainreg can be {''} if
+% desired. 
 %
 % NOTE: multiple brainReg only debugged for INTAN, need to implement for
 % spike gadgets ALP 7/14/19
