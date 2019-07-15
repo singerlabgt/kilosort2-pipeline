@@ -54,7 +54,6 @@ if getSingleUnitTimes
 end
 
 %% get waveforms
-% to be incorporated
 
 % params.dataDir = anclusterdir;
 % params.fileName = 'allrecordings.bin'; 
