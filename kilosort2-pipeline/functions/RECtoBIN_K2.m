@@ -17,10 +17,13 @@ for f = 1:length(fileNums) %loop around desired files
     if ~isempty(ind)
         rawdatafile = [rawdatadir, fileNames(ind).name];        
         splits = strsplit(fileNames(ind).name, '.');
-        configFileName = [rawdatadir, splits{1}, '.trodesconf'];
-        configInfo = readTrodesFileConfig(configFileName); %get some Trodes info
-        headerSize = str2num(configInfo.headerSize);
-        
+        if isfile(configFileName)
+            configFileName = [rawdatadir, splits{1}, '.trodesconf'];
+            configInfo = readTrodesFileConfig(configFileName); %get some Trodes info
+            headerSize = str2double(configInfo.headerSize);
+        else 
+            headerSize = 21; %use default if config file doesn't exist
+        end
         %import channels
         data = importChannels(rawdatafile, length(channels), channels,...
             30000, headerSize); %import channels func from Trodes code
