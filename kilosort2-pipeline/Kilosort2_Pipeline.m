@@ -18,19 +18,19 @@ clear; close all;
 % NOTE: multiple brainReg only debugged for INTAN, need to implement for
 % spike gadgets ALP 7/14/19
 
-animal = 8;             
-day = 190716;
-files = {1:11};  
-probeChannels = {1:11}; 
-brainReg = {'CA3'}; 
-animalID = 'N';
-rawdatadir = 'Y:\singer\RawData\RigB_SpikeGadgets\'; 
-clusterdir = 'Y:\singer\Nuri\Clustering\';
+animal = 7;             
+day = 190214;
+files = {1};  
+probeChannels = {33:64}; 
+brainReg = {'CA1'}; 
+animalID = 'A';
+rawdatadir = 'Y:\singer\RawData\Flicker_CA1CA3\'; 
+clusterdir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\';
 clusfolder = 'sorted\';
 
 %% Set run options
 
-writeToBIN = 1;
+writeToBIN = 0;
 getSingleUnitTimes = 1;
 
 %% write raw recording files to BIN for kilosort2
