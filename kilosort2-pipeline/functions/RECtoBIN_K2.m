@@ -12,13 +12,13 @@ function RECtoBIN_K2(rawdatadir, targetdir, dtype, fileNames, fileNums, channels
 binFile = [targetdir, 'allrecordings.bin'];
 recLength = zeros(1,length(fileNums));
 for f = 1:length(fileNums) %loop around desired files
-    ind = strfind({fileNames.name}, strcat('recording', num2str(fileNums(f))));
+    ind = strfind({fileNames.name}, strcat('recording', num2str(fileNums(f)),'_'));
     ind = cell2mat(ind);
     if ~isempty(ind)
         rawdatafile = [rawdatadir, fileNames(ind).name];        
         splits = strsplit(fileNames(ind).name, '.');
+        configFileName = [rawdatadir, splits{1}, '.trodesconf'];
         if isfile(configFileName)
-            configFileName = [rawdatadir, splits{1}, '.trodesconf'];
             configInfo = readTrodesFileConfig(configFileName); %get some Trodes info
             headerSize = str2double(configInfo.headerSize);
         else 

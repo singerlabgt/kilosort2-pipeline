@@ -21,7 +21,7 @@ clear; close all;
 animal = 8;             
 day = 190716;
 files = {1:11};  
-probeChannels = {1:11}; 
+probeChannels = {0:31}; 
 brainReg = {'CA3'}; 
 animalID = 'N';
 rawdatadir = 'Y:\singer\RawData\RigB_SpikeGadgets\'; 
@@ -31,7 +31,8 @@ clusfolder = 'sorted\';
 %% Set run options
 
 writeToBIN = 1;
-getSingleUnitTimes = 1;
+getSingleUnitTimes = 0;
+getWFstruct = 0;
 
 %% write raw recording files to BIN for kilosort2
 
