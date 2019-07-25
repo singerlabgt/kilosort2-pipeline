@@ -23,22 +23,32 @@ day = 190214;
 files = {1};  
 probeChannels = {33:64}; 
 brainReg = {'CA1'}; 
-animalID = 'A';
+animalID = {'A'};
 rawdatadir = 'Y:\singer\RawData\Flicker_CA1CA3\'; 
 clusterdir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\';
+processeddatadir = 'Y:\singer\ProcessedData\Flicker_7Day_CA1CA3\';
 clusfolder = 'sorted\';
 
 %% Set run options
+% writeToBin - first step, run to get .bin for Kilosort2
+% getSingleUnitTimes - run after manual curation in Phy2
 
-writeToBIN = 0;
-getSingleUnitTimes = 1;
+writeToBIN = 0; 
+getSingleUnitTimes = 0; 
+getWFstruct = 1;
+applyQualityMetrics = 0; 
+
+%% set rewriting options
+
+rewrite.eeg = 0;
+rewrite.wfs = 0;
 
 %% write raw recording files to BIN for kilosort2
 
 if writeToBIN
     for d = 1:length(day)
-        anrawdatadir = [rawdatadir, animalID, num2str(animal(d)), '_', num2str(day(d)), '\'];
-        anclusterdir = [clusterdir, animalID, num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anrawdatadir = [rawdatadir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anclusterdir = [clusterdir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\'];
         
         if ~exist(anclusterdir, 'dir'); mkdir(anclusterdir); end
         converttoBIN_K2(anrawdatadir, anclusterdir, files{d}, probeChannels, brainReg, clusfolder)
@@ -49,46 +59,33 @@ end
 
 if getSingleUnitTimes
     for d = 1:length(day)
-        anrawdatadir = [rawdatadir, animalID, num2str(animal(d)), '_', num2str(day(d)), '\'];
-        anclusterdir = [clusterdir, animalID, num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anrawdatadir = [rawdatadir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anclusterdir = [clusterdir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\'];
         
         makeClusterStructure(anclusterdir, files{d}, brainReg, clusfolder)
     end
 end
 
-%% get waveforms - will be incorporated
-
-% params.dataDir = anclusterdir;
-% params.fileName = 'allrecordings.bin'; 
-% params.dataType = 'int16';
-% params.nCh = 32;
-% params.wfWin = [-40 40]; 
-% params.nWf = 2000;
-% params.spikeTimes = spiketimes(spikeID==2);
-% params.spikeClusters = 2*ones(1,length(params.spikeTimes));
-% params.samprate = 20000; 
-
-% wf = getWaveForms(params); 
+%% get waveforms and cluster properties
 
 if getWFstruct
     for d = 1:length(day)
-        anrawdatadir = [rawdatadir, animalID, num2str(animal(d)), '_', num2str(day(d)), '\'];
-        anclusterdir = [clusterdir, animalID, num2str(animal(d)), '_', num2str(day(d)), '\'];
-        
-        getWaveForms_K2(anrawdatadir, anclusterdir, files{d}, probeChannels, brainReg, clusfolder)
+        for br = 1:length(brainReg)
+            anprocesseddatadir = [processeddatadir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\', brainReg{br}, '\'];
+            anclusterdir = fullfile(clusterdir, [animalID{d}, num2str(animal(d)), '_', num2str(day(d))], brainReg{br}, clusfolder);
+            figdir = fullfile(anclusterdir, 'figs');
+            
+            recinfo.iden = animalID{d}; 
+            recinfo.index = [animal(d) day(d)]; 
+            recinfo.files = files{d}; 
+            recinfo.brainReg = brainReg{br}; 
+            
+            getWaveForms_K2(anprocesseddatadir, anclusterdir, recinfo, figdir, rewrite)
+        end
     end
 end
 
-%% apply quality metrics - will be incorporated
+%% apply quality metrics and make final clusters structure
 
-% %getSNR
-% datPars.nCh = 32;
-% datPars.dataType = 'int16';
-% datPars.wfWin = [-30 30];
-% datPars.Fs = 20000;
-% datPars.makePlots = true;
-% datPars.nSpikesToUse = 5000;
-% datPars.filename = [anclusterdir, 'allrecordings.bin']; 
-% datPars.chanMap = readNPY(fullfile(anclusterdir, 'channel_map.npy'))+1;
-% 
-% snr = trueSpikeSNR(datPars, spiketimes(spikeID==2)); 
+if applyQualityMetrics 
+end

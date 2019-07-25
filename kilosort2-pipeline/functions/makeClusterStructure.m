@@ -8,7 +8,7 @@ for br = 1:length(brainReg)
     %read clustered information
     spikeInds = readNPY([anclusterdir, 'spike_times.npy']); %in indices
     spikeID = readNPY([anclusterdir, 'spike_clusters.npy']);
-    [clusterID, clusterGroup] = readClusterGroupsCSV([anclusterdir, 'cluster_groups.csv']);
+    [clusterID, clusterGroup] = readClusterGroupsCSV([anclusterdir, 'cluster_group.tsv']);
     templates = readNPY([anclusterdir, 'templates.npy']);
     spikeTemplates = readNPY([anclusterdir, 'spike_templates.npy']);
     channelMap = readNPY([anclusterdir, 'channel_map.npy']);
@@ -30,7 +30,7 @@ for br = 1:length(brainReg)
     %create structure
     clusters = struct('ID', num2cell(goodUnits), ...
         'spikeInds', repmat({[]}, 1, length(goodUnits)),...
-        'sampRate', num2cell(params.sample_rate*ones(1, length(goodUnits))), ...
+        'sampRate', num2cell(props.sampRate*ones(1, length(goodUnits))), ...
         'maxChan', num2cell(unitMaxChan'));
     
     %loop over recordings - this could be improved - how does Lu do it?
