@@ -22,7 +22,9 @@ for f = 1:length(fileNums) %loop around desired files
             configInfo = readTrodesFileConfig(configFileName); %get some Trodes info
             headerSize = str2double(configInfo.headerSize);
         else 
-            headerSize = 21; %use default if config file doesn't exist
+            cd('Y:\singer\RawData\RigB_SpikeGadgets')
+            configInfo = readTrodesFileConfig('Nuri_32ch_052719.trodesconf'); %use default config file if not overwriting
+            headerSize = str2double(configInfo.headerSize); 
         end
         %import channels
         data = importChannels(rawdatafile, length(channels), channels,...
