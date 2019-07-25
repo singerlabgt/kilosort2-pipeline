@@ -28,9 +28,9 @@ for f = 1:length(recinfo.files)
     
 end
 
-% get eeg waveforms
-if ~isfile([anclusterdir, 'waveformstats.mat']) || rewrite.WF
-    for clu = 1:length(allfiles{1}.clusters)
+% get waveforms from filtered eeg
+if ~isfile([anclusterdir, 'waveformstats.mat']) || rewrite.wf
+    for clu = 1:length(allfiles{1}.clusters) %should be same length all files
         WF(clu) = makeWFstructure(anprocesseddatadir, allfiles, clu, recinfo,...
             tAroundSpike, samprate, figdir);
     end

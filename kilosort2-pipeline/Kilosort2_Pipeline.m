@@ -39,9 +39,12 @@ getWFstruct = 1;
 applyQualityMetrics = 0; 
 
 %% set rewriting options
+% set these options to force the code to rewrite the filtered EEG files, or
+% the waveform files. Otherwise, the pipeline will load up previously
+% stored files if they exist. 
 
 rewrite.eeg = 0;
-rewrite.wfs = 0;
+rewrite.wf = 1;
 
 %% write raw recording files to BIN for kilosort2
 

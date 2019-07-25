@@ -10,7 +10,8 @@ function spikeWidth = calcSpikewidth_K2(WF, recinfo, clusIdx, samprate, figdir)
 %% calculate peak to trough
 resamplefactor = 16/(samprate/10000); %8 for 20kHz, 5.3333 for 30kHz, should optimize ALP 7/25
 waveformresampled = resample(WF,resamplefactor,1);
-waveformresampled = waveformresampled((resamplefactor*15):(60*resamplefactor)); %what do these numbers mean?? 
+% waveformresampled = waveformresampled((resamplefactor*15):(60*resamplefactor)); %what do these numbers mean?? 
+waveformresampled = waveformresampled(round((0.75/1000)*resamplefactor*samprate):round(((3/1000)*resamplefactor*samprate))); %for variable samprate
 temp = (waveformresampled - mean(waveformresampled));
 waveformresampled = temp/abs(min(temp));
 
