@@ -21,7 +21,7 @@ clear; close all;
 animal = 8;             
 day = 190716;
 files = {1:11};  
-probeChannels = {0:31}; 
+probeChannels = {1:32}; 
 brainReg = {'CA3'}; 
 animalID = 'N';
 rawdatadir = 'Y:\singer\RawData\RigB_SpikeGadgets\'; 

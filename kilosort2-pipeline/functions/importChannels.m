@@ -45,7 +45,7 @@ for i = 1:length(channels)
     junk = fread(fid,configsize,'uint8'); %config
     junk = fread(fid,headerSize,'int16'); %header block
     junk = fread(fid,1,'uint32'); %timestamp
-    junk = fread(fid,channels(i),'int16'); %skip ahead to the channel
+    junk = fread(fid,channels(i)-1,'int16'); %skip ahead to the channel
     channelData = fread(fid,[1,inf],'1*int16=>int16',(2*headerSize)+2+(NumChannels*2))';
     frewind(fid);
         
