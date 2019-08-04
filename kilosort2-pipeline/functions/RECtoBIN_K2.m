@@ -23,14 +23,12 @@ for f = 1:length(fileNums) %loop around desired files
             configInfo = readTrodesFileConfig(rawdatafile);%read configInfo directly from .rec file
         else
             configInfo = readTrodesFileConfig(configFileName);
-            
-            splits = strsplit(fileNames(ind).name, '.');
-            configFileName = [rawdatadir, splits{1}, '.trodesconf'];
-            
-            headerSize = str2double(configInfo.headerSize);
-            numChannels = str2double(configInfo.numChannels);
-            sampRate = str2double(configInfo.samplingRate);
         end
+        
+        headerSize = str2double(configInfo.headerSize);
+        numChannels = str2double(configInfo.numChannels);
+        sampRate = str2double(configInfo.samplingRate);
+        
         %import channels
         data = importChannels(rawdatafile, numChannels, channels,...
             sampRate, headerSize); %import channels func from Trodes code

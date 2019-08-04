@@ -18,9 +18,9 @@ clear; close all;
 % NOTE: multiple brainReg only debugged for INTAN, need to implement for
 % spike gadgets ALP 7/14/19
 
-animal = 8;             
-day = 190716;
-files = {1:11};  
+animal = 9;             
+day = 190804;
+files = {1:8};  
 probeChannels = {1:32}; 
 brainReg = {'CA3'}; 
 animalID = 'N';
