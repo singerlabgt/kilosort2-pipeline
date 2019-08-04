@@ -16,6 +16,7 @@ for f = 1:length(fileNums) %loop around desired files
     ind = find(~cellfun(@isempty,ind)); %find index of correct rec file 
     if ~isempty(ind)
         rawdatafile = [rawdatadir, fileNames(ind).name];
+<<<<<<< Updated upstream
         
         splits = strsplit(fileNames(ind).name, '.');
         configFileName = [rawdatadir, splits{1}, '.trodesconf'];
@@ -23,6 +24,16 @@ for f = 1:length(fileNums) %loop around desired files
             configInfo = readTrodesFileConfig(rawdatafile);%read configInfo directly from .rec file
         else 
             configInfo = readTrodesFileConfig(configFileName);
+=======
+        splits = strsplit(fileNames(ind).name, '.');
+        configFileName = [rawdatadir, splits{1}, '.trodesconf'];
+        if isfile(configFileName)
+            configInfo = readTrodesFileConfig(configFileName); %get some Trodes info
+            headerSize = str2double(configInfo.headerSize);
+        else
+            configInfo = readTrodesFileConfig(rawdatafile);
+            headerSize = str2double(configInfo.headerSize); %use default if config file doesn't exist
+>>>>>>> Stashed changes
         end
         headerSize = str2double(configInfo.headerSize);
         numChannels = str2double(configInfo.numChannels);
@@ -50,7 +61,7 @@ for f = 1:length(fileNums) %loop around desired files
 end
 
 props.recLength = recLength;
-props.sampRate = 30000;
+props.sampRate = configInfo.samplingRate;
 props.fileNames = fileNames;
 
 %save properties for fixing spike times after sorting
