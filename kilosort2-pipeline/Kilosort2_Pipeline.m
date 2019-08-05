@@ -20,6 +20,17 @@ clear; close all;
 % NOTE: multiple brainReg only debugged for INTAN, need to implement for
 % spike gadgets ALP 7/14/19
 
+%Nuri
+%animal = 9;             
+%day = 190804;
+%files = {1:8};  
+%probeChannels = {1:32}; 
+%brainReg = {'CA3'}; 
+%animalID = 'N';
+%rawdatadir = 'Y:\singer\RawData\RigB_SpikeGadgets\'; 
+%clusterdir = 'Y:\singer\Nuri\Clustering\';
+
+
 %Test - Abby Intan
 animal = 7;             
 day = 190214;
@@ -30,6 +41,7 @@ animalID = {'A'};
 rawdatadir = 'Y:\singer\RawData\Flicker_CA1CA3\'; 
 clusterdir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\';
 processeddatadir = 'Y:\singer\ProcessedData\Flicker_7Day_CA1CA3\';
+
 clusfolder = 'sorted\';
 
 %Test - Nuri Spike GAdgets

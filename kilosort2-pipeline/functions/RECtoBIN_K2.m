@@ -12,22 +12,26 @@ function RECtoBIN_K2(rawdatadir, targetdir, dtype, fileNames, fileNums, channels
 binFile = [targetdir, 'allrecordings.bin'];
 recLength = zeros(1,length(fileNums));
 for f = 1:length(fileNums) %loop around desired files
-    ind = strfind({fileNames.name}, strcat('recording', num2str(fileNums(f))));
-    ind = cell2mat(ind);
+    ind = strfind({fileNames.name}, strcat('recording', num2str(fileNums(f)),'_')); %added underscore(_) bc the number 1 appears in recordings 1, 10, 11, etc.
+    ind = find(~cellfun(@isempty,ind)); %find index of correct rec file
     if ~isempty(ind)
-        rawdatafile = [rawdatadir, fileNames(ind).name];        
+        rawdatafile = [rawdatadir, fileNames(ind).name];
+        
         splits = strsplit(fileNames(ind).name, '.');
-       
-            configFileName = [rawdatadir, splits{1}, '.trodesconf'];
-        if isfile(configFileName)     
-            configInfo = readTrodesFileConfig(configFileName); %get some Trodes info
-            headerSize = str2double(configInfo.headerSize);
-        else 
-            headerSize = 21; %use default if config file doesn't exist
+        configFileName = [rawdatadir, splits{1}, '.trodesconf'];
+        if (~isfile(configFileName)) %check if session-specific config file exists, if not use default
+            configInfo = readTrodesFileConfig(rawdatafile);%read configInfo directly from .rec file
+        else
+            configInfo = readTrodesFileConfig(configFileName);
         end
+        
+        headerSize = str2double(configInfo.headerSize);
+        numChannels = str2double(configInfo.numChannels);
+        sampRate = str2double(configInfo.samplingRate);
+        
         %import channels
-        data = importChannels(rawdatafile, length(channels), channels,...
-            30000, headerSize); %import channels func from Trodes code
+        data = importChannels(rawdatafile, numChannels, channels,...
+            sampRate, headerSize); %import channels func from Trodes code
         
         %write to allrecordings.bin
         if f > 1
@@ -47,7 +51,7 @@ for f = 1:length(fileNums) %loop around desired files
 end
 
 props.recLength = recLength;
-props.sampRate = 30000;
+props.sampRate = sampRate;
 props.fileNames = fileNames;
 
 %save properties for fixing spike times after sorting
