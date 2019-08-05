@@ -6,6 +6,7 @@ function WF = makeWFstructure(anprocesseddatadir, allfiles, clu, recinfo,...
 
 spikeCount = 1;
 recLength = 0;
+isi = [];
 for f = 1:length(recinfo.files)
     %load WF filtered EEG
     load([anprocesseddatadir, num2str(allfiles{f}.clusters(clu).maxChan),...
@@ -22,6 +23,10 @@ for f = 1:length(recinfo.files)
             tempWFs(spikeCount, :) = filtdat(waveforminds);
         end
         spikeCount = spikeCount+1;
+        if spikeIdx > 1
+            diffinds = allfiles{f}.clusters(clu).spikeInds(spikeIdx) - allfiles{f}.clusters(clu).spikeInds(spikeIdx-1);
+            isi = [isi diffinds];
+        end
     end
     recLength = recLength+length(filtdat);
     clear filtdat
@@ -32,7 +37,8 @@ recLength = recLength./samprate; %in s
 WF.mn = mean(tempWFs, 1, 'omitnan');
 WF.std = std(tempWFs, 0, 1, 'omitnan');
 WF.snr = (max(WF.mn) - min(WF.mn))/mean(WF.std);
-WF.peak2trough = calcSpikewidth_K2(WF.mn, recinfo, allfiles{f}.clusters(clu).ID, samprate, figdir);
+WF.peak2trough_ms = calcSpikewidth_K2(WF.mn, recinfo, allfiles{f}.clusters(clu).ID, samprate, figdir);
 WF.firingrate = spikeCount/recLength; %in Hz
+WF.isi_ms = isi./(samprate/1000); %in ms
 end
 

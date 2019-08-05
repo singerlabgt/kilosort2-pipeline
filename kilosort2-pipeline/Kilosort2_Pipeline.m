@@ -117,7 +117,7 @@ end
 
 %% apply quality metrics and make final clusters structure
 % Things I know I can do: SNR, ISI
-% Things I am not sure about: isolation against other units, noise overlap 
+% Things I want to do: isolation against other units
 
 th.SNR =  1;                    % >= 1 SNR
 th.ISI = 0.0001;                % <= 0.01% refractory period violations
