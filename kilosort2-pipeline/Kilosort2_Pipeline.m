@@ -59,7 +59,7 @@ qualityMetrics = 0;
 % exist. 
 
 rewrite.eeg = 0;
-rewrite.wf = 1;
+rewrite.wf = 0;
 
 %% write raw recording files to BIN for kilosort2
 

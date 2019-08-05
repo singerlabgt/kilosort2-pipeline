@@ -17,8 +17,9 @@ for f = 1:length(fileNums) %loop around desired files
     if ~isempty(ind)
         rawdatafile = [rawdatadir, fileNames(ind).name];        
         splits = strsplit(fileNames(ind).name, '.');
-        if isfile(configFileName)
+       
             configFileName = [rawdatadir, splits{1}, '.trodesconf'];
+        if isfile(configFileName)     
             configInfo = readTrodesFileConfig(configFileName); %get some Trodes info
             headerSize = str2double(configInfo.headerSize);
         else 
