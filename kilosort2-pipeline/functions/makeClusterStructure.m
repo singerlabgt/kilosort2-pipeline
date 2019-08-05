@@ -11,8 +11,7 @@ for br = 1:length(brainReg)
     if isfile(fullfile(anclusterdir, 'cluster_groups.csv'))
         [clusterID, clusterGroup] = readClusterGroupsCSV([anclusterdir, 'cluster_groups.csv']);
     elseif isfile(fullfile(anclusterdir, 'cluster_group.tsv')) %dev files are saved in .tsv
-        [clusterID, clusterGroup] = readClusterGroupsCSV([anclusterdir, 'cluster_group.tsv']);
-    end
+        [clusterID, clusterGroup] = readClusterGroupsCSV([anclusterdir, 'cluster_group.tsv']); end
     templates = readNPY([anclusterdir, 'templates.npy']);
     spikeTemplates = readNPY([anclusterdir, 'spike_templates.npy']);
     channelMap = readNPY([anclusterdir, 'channel_map.npy']);
