@@ -2,16 +2,19 @@ function makeClusterStructure(clusterdir, files, brainReg, clusfolder)
 % makeClusterStructure Make post curation data structure for Kilosort2.
 %   ALP 7/14/19
 
-for br = 1:length(brainReg)
+for br = 1:length(brainReg) %could move this loop outside of the function for consistency?
     anclusterdir = fullfile(clusterdir, brainReg{br}, clusfolder);
 
     %read clustered information
     spikeInds = readNPY([anclusterdir, 'spike_times.npy']); %in indices
     spikeID = readNPY([anclusterdir, 'spike_clusters.npy']);
+    
     if isfile(fullfile(anclusterdir, 'cluster_groups.csv'))
         [clusterID, clusterGroup] = readClusterGroupsCSV([anclusterdir, 'cluster_groups.csv']);
     elseif isfile(fullfile(anclusterdir, 'cluster_group.tsv')) %dev files are saved in .tsv
-        [clusterID, clusterGroup] = readClusterGroupsCSV([anclusterdir, 'cluster_group.tsv']); end
+        [clusterID, clusterGroup] = readClusterGroupsCSV([anclusterdir, 'cluster_group.tsv']); 
+    end
+
     templates = readNPY([anclusterdir, 'templates.npy']);
     spikeTemplates = readNPY([anclusterdir, 'spike_templates.npy']);
     channelMap = readNPY([anclusterdir, 'channel_map.npy']);
@@ -33,8 +36,8 @@ for br = 1:length(brainReg)
     %create structure
     clusters = struct('ID', num2cell(goodUnits), ...
         'spikeInds', repmat({[]}, 1, length(goodUnits)),...
-        'sampRate', num2cell(params.sample_rate*ones(1, length(goodUnits))), ...
-        'maxChan', num2cell(unitMaxChan'));
+        'sampRate', num2cell(props.sampRate*ones(1, length(goodUnits))), ...
+        'maxChan', num2cell(unitMaxChan'), 'info', repmat({'pre quality control metrics'}, 1, length(goodUnits)));
     
     %loop over recordings - this could be improved - how does Lu do it?
     elapsedLength = 0;
@@ -57,7 +60,7 @@ for br = 1:length(brainReg)
         end
         elapsedLength = elapsedLength+props.recLength(f);
         
-        save([anclusterdir, 'clusters', num2str(files(f)), '.mat'], 'clusters')
+        save([anclusterdir, 'tempclusters', num2str(files(f)), '.mat'], 'clusters')
     end
 end
 end
