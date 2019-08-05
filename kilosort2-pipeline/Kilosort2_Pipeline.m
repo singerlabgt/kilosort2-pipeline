@@ -30,8 +30,8 @@ clusfolder = 'sorted\';
 
 %% Set run options
 
-writeToBIN = 1;
-getSingleUnitTimes = 0;
+writeToBIN = 0;
+getSingleUnitTimes = 1;
 getWFstruct = 0;
 
 %% write raw recording files to BIN for kilosort2

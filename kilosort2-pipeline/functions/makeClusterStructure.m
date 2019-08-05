@@ -8,7 +8,11 @@ for br = 1:length(brainReg)
     %read clustered information
     spikeInds = readNPY([anclusterdir, 'spike_times.npy']); %in indices
     spikeID = readNPY([anclusterdir, 'spike_clusters.npy']);
-    [clusterID, clusterGroup] = readClusterGroupsCSV([anclusterdir, 'cluster_groups.csv']);
+    if isfile(fullfile(anclusterdir, 'cluster_groups.csv'))
+        [clusterID, clusterGroup] = readClusterGroupsCSV([anclusterdir, 'cluster_groups.csv']);
+    elseif isfile(fullfile(anclusterdir, 'cluster_group.tsv')) %dev files are saved in .tsv
+        [clusterID, clusterGroup] = readClusterGroupsCSV([anclusterdir, 'cluster_group.tsv']);
+    end
     templates = readNPY([anclusterdir, 'templates.npy']);
     spikeTemplates = readNPY([anclusterdir, 'spike_templates.npy']);
     channelMap = readNPY([anclusterdir, 'channel_map.npy']);
