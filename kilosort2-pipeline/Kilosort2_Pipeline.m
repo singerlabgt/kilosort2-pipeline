@@ -21,26 +21,26 @@ clear; close all;
 % spike gadgets ALP 7/14/19
 
 %Nuri
-%animal = 9;             
-%day = 190804;
-%files = {1:8};  
-%probeChannels = {1:32}; 
-%brainReg = {'CA3'}; 
-%animalID = 'N';
-%rawdatadir = 'Y:\singer\RawData\RigB_SpikeGadgets\'; 
-%clusterdir = 'Y:\singer\Nuri\Clustering\';
-
+animal = 9;             
+day = 190804;
+files = {1:8};  
+probeChannels = {1:32}; 
+brainReg = {'CA3'}; 
+animalID = 'N';
+rawdatadir = 'Y:\singer\RawData\RigB_SpikeGadgets\'; 
+clusterdir = 'Y:\singer\Nuri\Clustering\';
+processeddatadir = 'Y:\singer\ProcessedData\VR_Novelty\';
 
 %Test - Abby Intan
-animal = 7;             
-day = 190214;
-files = {1};  
-probeChannels = {33:64}; 
-brainReg = {'CA1'}; 
-animalID = {'A'};
-rawdatadir = 'Y:\singer\RawData\Flicker_CA1CA3\'; 
-clusterdir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\';
-processeddatadir = 'Y:\singer\ProcessedData\Flicker_7Day_CA1CA3\';
+% animal = 7;             
+% day = 190214;
+% files = {1};  
+% probeChannels = {33:64}; 
+% brainReg = {'CA1'}; 
+% animalID = {'A'};
+% rawdatadir = 'Y:\singer\RawData\Flicker_CA1CA3\'; 
+% clusterdir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\';
+% processeddatadir = 'Y:\singer\ProcessedData\Flicker_7Day_CA1CA3\';
 
 clusfolder = 'sorted\';
 
@@ -60,9 +60,9 @@ clusfolder = 'sorted\';
 % writeToBin - first step, run to get .bin for Kilosort2
 % getSingleUnitTimes - run after manual curation in Phy2
 
-writeToBIN = 1; 
+writeToBIN = 0; 
 getSingleUnitTimes = 0; 
-getWFstruct = 0;
+getWFstruct = 1;
 qualityMetrics = 0; 
 
 %% set rewriting options
@@ -101,11 +101,11 @@ end
 if getWFstruct
     for d = 1:length(day)
         for br = 1:length(brainReg)
-            anprocesseddatadir = [processeddatadir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\', brainReg{br}, '\'];
-            anclusterdir = fullfile(clusterdir, [animalID{d}, num2str(animal(d)), '_', num2str(day(d))], brainReg{br}, clusfolder);
+            anprocesseddatadir = [processeddatadir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\', brainReg{br}, '\'];
+            anclusterdir = fullfile(clusterdir, [animalID(d), num2str(animal(d)), '_', num2str(day(d))], brainReg{br}, clusfolder);
             figdir = fullfile(anclusterdir, 'figs');
             
-            recinfo.iden = animalID{d}; 
+            recinfo.iden = animalID(d); 
             recinfo.index = [animal(d) day(d)]; 
             recinfo.files = files{d}; 
             recinfo.brainReg = brainReg{br}; 
