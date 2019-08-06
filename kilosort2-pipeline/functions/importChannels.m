@@ -47,14 +47,11 @@ for i = 1:length(channels)
     junk = fread(fid,1,'uint32'); %timestamp
     junk = fread(fid,channels(i)-1,'int16'); %skip ahead to the channel
     channelData = fread(fid,[1,inf],'1*int16=>int16',(2*headerSize)+2+(NumChannels*2))';
-    frewind(fid);
-        
-    %commeted out bc SpikeGadgets output is already inverted 
 %     channelData = double(channelData)*-1; %reverse the sign to make spike point up
     channelData = double(channelData) * 12780; %convert to uV (for Intan digital chips)
     channelData = channelData / 65536;
     recData = [recData channelData];
-       
+    frewind(fid);
 end
 
 fclose(fid);
