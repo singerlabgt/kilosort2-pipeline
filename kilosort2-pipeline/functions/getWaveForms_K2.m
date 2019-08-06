@@ -36,11 +36,5 @@ if ~isfile([anclusterdir, 'waveformstats.mat']) || rewrite.wf
     end
 end
 save([anclusterdir, 'waveforms.mat'], 'WF')
-
-
-% get stable times
-
-
-
 end
 
