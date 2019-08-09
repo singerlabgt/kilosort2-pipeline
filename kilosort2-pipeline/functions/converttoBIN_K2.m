@@ -21,13 +21,13 @@ for p = 1:length(probes)
     
     if ~isempty(files.intan)
         disp('Intan files detected.')
-        perRegDir = fullfile(clusterdir, brainreg{p}, clusfolder);
+        perRegDir = fullfile(clusterdir, brainreg{p}, clusfolder, 'kilosort\');
         if ~exist(perRegDir, 'dir'); mkdir(perRegDir); end
         RHDtoBIN_K2(rawdatadir, perRegDir, 'int16', ...
             files.nums, probes{p})
     elseif ~isempty(files.spikegadgets)
         disp('Spike Gadgets files detected.')
-        perRegDir = fullfile(clusterdir, brainreg{p}, clusfolder);
+        perRegDir = fullfile(clusterdir, brainreg{p}, clusfolder, 'kilosort\');
         if ~exist(perRegDir, 'dir'); mkdir(perRegDir); end
         RECtoBIN_K2(rawdatadir, perRegDir, 'int16', files.spikegadgets,...
             files.nums, probes{p})
