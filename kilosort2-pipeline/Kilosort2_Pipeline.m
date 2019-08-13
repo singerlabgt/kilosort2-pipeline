@@ -9,40 +9,61 @@
 clear; close all;
 
 %% Set parameters
-% Animal and day should be 1xN vect of same length. Files
-% should be cell array with each element containing vect of desired files.
-% probe channels should be cell array of same length as brainReg, with each
-% element containing channels of desired region. brainreg can be {''} if
-% desired. 
+% animal and day: 1xN vect of same length 
+% files: cell array with each element containing 1xN vect of desired files
+% probeChannels: cell array with each element containing 1xN vect of 
+%   channels of desired region. channels should be 0 based. 
+% brainReg: cell array of brain regions with same length as probeChannels. 
+%    can be {''} if desired
+% animalID: cell array of ID letters with same length as brainReg
 %
 % NOTE: multiple brainReg only debugged for INTAN, need to implement for
 % spike gadgets ALP 7/14/19
 
+%Nuri
+animal = 8;             
+day = 190716;
+files = {1:11};  
 probeChannels = {1:32}; 
 brainReg = {'CA3'}; 
 animalID = 'N';
-rawdatadir = 'Y:\singer\RawData\RigB_SpikeGadgets\'; 
-clusterdir = 'Y:\singer\Nuri\Clustering\';
+rawdatadir = '\\neuro-cloud\labs\singer\RawData\RigB_SpikeGadgets\'; 
+clusterdir = '\\neuro-cloud\labs\singer\Nuri\Clustering\';
+processeddatadir = '\\neuro-cloud\labs\singer\ProcessedData\VR_Novelty\';
+
+%Test - Abby Intan
+% animal = 7;             
+% day = 190214;
+% files = {1};  
+% probeChannels = {33:64}; 
+% brainReg = {'CA1'}; 
+% animalID = {'A'};
+% rawdatadir = 'Y:\singer\RawData\Flicker_CA1CA3\'; 
+% clusterdir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\';
+% processeddatadir = 'Y:\singer\ProcessedData\Flicker_7Day_CA1CA3\';
+
 clusfolder = 'sorted\';
-processeddatadir = 'Y:\singer\ProcessedData\VR_Novelty\';
-spreadsheetdir = 'Y:\singer\Nuri\Spreadsheets\VR_NoveltySpreadsheet.xlsx';
 
-% Get all indices
-[allindex, ~] = getallindex_SpikeGadgetsNJ(processeddatadir,...
-    spreadsheetdir,'ca3', 1);
-allindex = allindex(allindex(:,2) >190624,:);
-allindex = allindex(allindex(:,2) ~= 190719,:);
-
-day = unique(allindex(:,2));
+%Test - Nuri Spike GAdgets
+% animal = 1;             
+% day = 190619;
+% files = {1};  
+% probeChannels = {1:32}; 
+% brainReg = {''}; 
+% animalID = {'N'};
+% rawdatadir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\CA3\'; 
+% clusterdir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\CA3\';
+% % processeddatadir = 'Y:\singer\ProcessedData\Flicker_7Day_CA1CA3\';
+% clusfolder = '';
 
 %% Set run options
 % writeToBin - first step, run to get .bin for Kilosort2
 % getSingleUnitTimes - run after manual curation in Phy2
 
-writeToBIN = 1; 
-getSingleUnitTimes = 0; 
-getWFstruct = 0;
-qualityMetrics = 0; 
+writeToBIN = 0; 
+getSingleUnitTimes = 1; 
+getWFstruct = 1;
+qualityMetrics = 1; 
 
 %% set rewriting options
 % set these options to force the code to rewrite the files specified below. 
@@ -50,20 +71,19 @@ qualityMetrics = 0;
 % exist. 
 
 rewrite.eeg = 0;
-rewrite.wf = 0;
+rewrite.wf = 1;
+rewrite.qualitymetrics = 1;
+
 
 %% write raw recording files to BIN for kilosort2
 
 if writeToBIN
     for d = 1:length(day)
-        animal = unique(allindex(allindex(:,2) == day(d),1));
-        files = unique(allindex(allindex(:,2) == day(d),3));
-        
-        anrawdatadir = [rawdatadir, animalID, num2str(animal), '_', num2str(day(d)), '\'];
-        anclusterdir = [clusterdir, animalID, num2str(animal), '_', num2str(day(d)), '\'];
+        anrawdatadir = [rawdatadir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anclusterdir = [clusterdir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\'];
         
         if ~exist(anclusterdir, 'dir'); mkdir(anclusterdir); end
-        converttoBIN_K2(anrawdatadir, anclusterdir, files(d), probeChannels, brainReg, clusfolder)
+        converttoBIN_K2(anrawdatadir, anclusterdir, files{d}, probeChannels, brainReg, clusfolder)
     end
 end
 
@@ -71,8 +91,8 @@ end
 
 if getSingleUnitTimes
     for d = 1:length(day)
-        anrawdatadir = [rawdatadir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\'];
-        anclusterdir = [clusterdir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anrawdatadir = [rawdatadir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anclusterdir = [clusterdir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\'];
         
         makeClusterStructure(anclusterdir, files{d}, brainReg, clusfolder)
     end
@@ -84,7 +104,7 @@ if getWFstruct
     for d = 1:length(day)
         for br = 1:length(brainReg)
             anprocesseddatadir = [processeddatadir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\', brainReg{br}, '\'];
-            anclusterdir = fullfile(clusterdir, [animalID(d), num2str(animal(d)), '_', num2str(day(d))], brainReg{br}, clusfolder);
+            anclusterdir = [clusterdir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\' brainReg{br}, '\',clusfolder];
             figdir = fullfile(anclusterdir, 'figs');
             
             recinfo.iden = animalID(d); 
@@ -102,15 +122,23 @@ end
 % Things I want to do: isolation against other units
 
 th.SNR =  1;                    % >= 1 SNR
-th.ISI = 0.0001;                % <= 0.01% refractory period violations
+th.ISI = 0.001;                % <= 0.1% refractory period violations
 th.refractoryPeriod = 0.001;    % 1ms refractory period duration
-th.noiseOverlap
-th.isolation
+th.info = '>= th.SNR, <= th.ISI (frac violations/allISI), th.refractoryPeriod in s'; 
+% th.noiseOverlap
+% th.isolation
 
-if qualityMetrics 
+if qualityMetrics
     for d = 1:length(day)
         for br = 1:length(brainReg)
+            anclusterdir = fullfile(clusterdir, [animalID(d), num2str(animal(d)), '_', num2str(day(d))], brainReg{br}, clusfolder);
             
+            recinfo.iden = animalID(d); 
+            recinfo.index = [animal(d) day(d)]; 
+            recinfo.files = files{d}; 
+            recinfo.brainReg = brainReg{br}; 
+            
+            applyQualityMetrics(anclusterdir, recinfo, rewrite.qualitymetrics, th)
         end
     end
 end
