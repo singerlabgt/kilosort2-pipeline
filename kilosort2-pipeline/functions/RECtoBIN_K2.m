@@ -10,7 +10,12 @@ function RECtoBIN_K2(rawdatadir, targetdir, dtype, fileNames, fileNums, channels
 
 
 binFile = [targetdir, 'allrecordings.bin'];
-recLength = zeros(1,length(fileNums));
+id = fopen(binFile, 'w'); %clear all preexisting content to overwrite
+fclose(id);
+clear id
+
+recLength = zeros(length(fileNums),1);
+
 for f = 1:length(fileNums) %loop around desired files
     ind = strfind({fileNames.name}, strcat('recording', num2str(fileNums(f)),'_')); %added underscore(_) bc the number 1 appears in recordings 1, 10, 11, etc.
     ind = find(~cellfun(@isempty,ind)); %find index of correct rec file
@@ -33,21 +38,18 @@ for f = 1:length(fileNums) %loop around desired files
         data = importChannels(rawdatafile, numChannels, channels,...
             sampRate, headerSize); %import channels func from Trodes code
         
-        %write to allrecordings.bin
-        if f > 1
-            fid = fopen(binFile, 'a');
-            fwrite(fid, data', dtype);
-        else
-            fid = fopen(binFile, 'w');
-            fwrite(fid, data', dtype);
-        end
-        
-        fclose(fid);
-        recLength(f) = size(data,1);
-        clear data
     else
         error(['File ', num2str(fileNums(f)), ' not found.'])
     end
+    
+    %write to allrecordings.bin
+    fid = fopen(binFile, 'a');
+    fwrite(fid, data.', dtype);
+    fclose(fid);
+    
+    recLength(f) = size(data,1);
+    clear data
+    
 end
 
 props.recLength = recLength;
@@ -57,4 +59,3 @@ props.fileNames = fileNames;
 %save properties for fixing spike times after sorting
 save([targetdir, 'sortingprops.mat'], 'props')
 end
-

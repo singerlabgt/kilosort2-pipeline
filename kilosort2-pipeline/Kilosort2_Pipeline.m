@@ -27,9 +27,9 @@ files = {1:8};
 probeChannels = {1:32}; 
 brainReg = {'CA3'}; 
 animalID = 'N';
-rawdatadir = 'Y:\singer\RawData\RigB_SpikeGadgets\'; 
-clusterdir = 'Y:\singer\Nuri\Clustering\';
-processeddatadir = 'Y:\singer\ProcessedData\VR_Novelty\';
+rawdatadir = '\\neuro-cloud\labs\singer\RawData\RigB_SpikeGadgets\'; 
+clusterdir = '\\neuro-cloud\labs\singer\Nuri\Clustering\';
+processeddatadir = '\\neuro-cloud\labs\singer\ProcessedData\VR_Novelty\';
 
 %Test - Abby Intan
 % animal = 7;             
@@ -61,8 +61,8 @@ clusfolder = 'sorted\';
 % getSingleUnitTimes - run after manual curation in Phy2
 
 writeToBIN = 0; 
-getSingleUnitTimes = 0; 
-getWFstruct = 1;
+getSingleUnitTimes = 1; 
+getWFstruct = 0;
 qualityMetrics = 0; 
 
 %% set rewriting options
@@ -70,15 +70,15 @@ qualityMetrics = 0;
 % Otherwise, the pipeline will load up previously stored files if they 
 % exist. 
 
-rewrite.eeg = 0;
-rewrite.wf = 0;
+rewrite.eeg = 1;
+rewrite.wf = 1;
 
 %% write raw recording files to BIN for kilosort2
 
 if writeToBIN
     for d = 1:length(day)
-        anrawdatadir = [rawdatadir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\'];
-        anclusterdir = [clusterdir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anrawdatadir = [rawdatadir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anclusterdir = [clusterdir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\'];
         
         if ~exist(anclusterdir, 'dir'); mkdir(anclusterdir); end
         converttoBIN_K2(anrawdatadir, anclusterdir, files{d}, probeChannels, brainReg, clusfolder)
@@ -89,8 +89,8 @@ end
 
 if getSingleUnitTimes
     for d = 1:length(day)
-        anrawdatadir = [rawdatadir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\'];
-        anclusterdir = [clusterdir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anrawdatadir = [rawdatadir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anclusterdir = [clusterdir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\'];
         
         makeClusterStructure(anclusterdir, files{d}, brainReg, clusfolder)
     end
@@ -102,7 +102,7 @@ if getWFstruct
     for d = 1:length(day)
         for br = 1:length(brainReg)
             anprocesseddatadir = [processeddatadir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\', brainReg{br}, '\'];
-            anclusterdir = fullfile(clusterdir, [animalID(d), num2str(animal(d)), '_', num2str(day(d))], brainReg{br}, clusfolder);
+            anclusterdir = [clusterdir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\' brainReg{br}, '\',clusfolder];
             figdir = fullfile(anclusterdir, 'figs');
             
             recinfo.iden = animalID(d); 

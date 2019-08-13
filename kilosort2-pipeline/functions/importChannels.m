@@ -1,7 +1,7 @@
-function [recData, timestamps] = importChannels(filename, NumChannels, channels ,samplingRate,headerSize, configExists)  
+function [recData, timestamps] = importChannels(filename,NumChannels, channels,samplingRate,headerSize, configExists)
 
 
-%[recData, timestamps] = importChannels(filename,NumChannels, channels,samplingRate,headerSize, configExists) )  
+%[recData, timestamps] = importChannels(filename,NumChannels, channels,samplingRate,headerSize, configExists) )
 
 %Imports channel data in matlab from the raw data file
 %
@@ -15,11 +15,11 @@ function [recData, timestamps] = importChannels(filename, NumChannels, channels 
 %
 %OUTPUTS
 %timestamps--the system clock when each sample was taken
-%recData-- an M by N matrix with N data points and M channels (M is equal to the number of channels in the input)
+%recData-- an N by M matrix with N data points and M channels (M is equal to the number of channels in the input)
 
 configsize = 0;
 if (nargin < 6)
-    configExists = 1;   
+    configExists = 1;
 end
 
 fid = fopen(filename,'r');
@@ -36,29 +36,25 @@ if (nargout > 1)
     junk = fread(fid,headerSize,'int16');
     timestamps = (fread(fid,[1,inf],'1*uint32=>double',(2*headerSize)+(NumChannels*2))')/samplingRate;
     %timestamps = double(timestamps)/samplingRate;
-    frewind(fid);
+    %     frewind(fid);
+    fseek(fid, 0, 'bof'); %alternative to frewind bc it keeps failing
+    
 end
 
 recData = [];
-for i = 1:length(channels) 
+for i = 1:length(channels)
     
     junk = fread(fid,configsize,'uint8'); %config
     junk = fread(fid,headerSize,'int16'); %header block
     junk = fread(fid,1,'uint32'); %timestamp
     junk = fread(fid,channels(i)-1,'int16'); %skip ahead to the channel
     channelData = fread(fid,[1,inf],'1*int16=>int16',(2*headerSize)+2+(NumChannels*2))';
-    frewind(fid);
-        
-    %commeted out bc SpikeGadgets output is already inverted 
-%     channelData = double(channelData)*-1; %reverse the sign to make spike point up
-    channelData = double(channelData) * 12780; %convert to uV (for Intan digital chips)
-    channelData = channelData / 65536;
+    %     channelData = double(channelData)*-1; %reverse the sign to make spike point up
+    channelData = double(channelData) * 12780 / 65536; %convert to uV (for Intan digital chips)
     recData = [recData channelData];
-       
+    
+    fseek(fid, 0, 'bof'); %alternative to frewind bc it keeps failing
+    %     frewind(fid);
 end
 
 fclose(fid);
-
-
-
-
