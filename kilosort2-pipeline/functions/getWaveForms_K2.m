@@ -4,7 +4,7 @@ function getWaveForms_K2(anprocesseddatadir, anclusterdir, recinfo, figdir, rewr
 %   stableclustertimes from Abigail Paulson
 %ALP 7/15/19
 
-load([anclusterdir, 'sortingprops.mat'], 'props')
+load([anclusterdir, 'kilosort\sortingprops.mat'], 'props')
 samprate = props.sampRate;
 tAroundSpike = [0.001*samprate .002*samprate]; %1ms before and 2ms after
 
@@ -16,8 +16,8 @@ for f = 1:length(recinfo.files)
     disp(['Filtering raweeg for file ', num2str(f), ' of ', num2str(length(recinfo.files))])
     
     % load cluster structure
-    allfiles{f} = load([anclusterdir, 'clusters', num2str(recinfo.files(f)), '.mat'], 'clusters');
-    WFchannels = [allfiles{f}.clusters.maxChan];
+    allfiles{f} = load([anclusterdir, 'rawclusters', num2str(recinfo.files(f)), '.mat'], 'rawclusters');
+    WFchannels = [allfiles{f}.rawclusters.maxChan];
     WFchannels = unique(WFchannels);
     
     %filter rawdata
@@ -29,18 +29,13 @@ for f = 1:length(recinfo.files)
 end
 
 % get waveforms from filtered eeg
-if ~isfile([anclusterdir, 'waveformstats.mat']) || rewrite.wf
-    for clu = 1:length(allfiles{1}.clusters) %should be same length all files
-        WF(clu) = makeWFstructure(anprocesseddatadir, allfiles, clu, recinfo,...
+if ~isfile([anclusterdir, 'clustermetrics.mat']) || rewrite.wf
+    disp('Getting cluster metrics')
+    parfor clu = 1:length(allfiles{1}.rawclusters) %should be same length all files
+        clustermetrics(clu) = makeWFstructure(anprocesseddatadir, allfiles, clu, recinfo,...
             tAroundSpike, samprate, figdir);
     end
 end
-save([anclusterdir, 'waveforms.mat'], 'WF')
-
-
-% get stable times
-
-
-
+save([anclusterdir, 'clustermetrics.mat'], 'clustermetrics')
 end
 

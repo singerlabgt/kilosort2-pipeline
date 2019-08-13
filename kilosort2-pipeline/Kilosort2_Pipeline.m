@@ -61,17 +61,19 @@ clusfolder = 'sorted\';
 % getSingleUnitTimes - run after manual curation in Phy2
 
 writeToBIN = 0; 
-getSingleUnitTimes = 1; 
+getSingleUnitTimes = 0; 
 getWFstruct = 0;
-qualityMetrics = 0; 
+qualityMetrics = 1; 
 
 %% set rewriting options
 % set these options to force the code to rewrite the files specified below. 
 % Otherwise, the pipeline will load up previously stored files if they 
 % exist. 
 
-rewrite.eeg = 1;
-rewrite.wf = 1;
+rewrite.eeg = 0;
+rewrite.wf = 0;
+rewrite.qualitymetrics = 1;
+
 
 %% write raw recording files to BIN for kilosort2
 
@@ -120,15 +122,23 @@ end
 % Things I want to do: isolation against other units
 
 th.SNR =  1;                    % >= 1 SNR
-th.ISI = 0.0001;                % <= 0.01% refractory period violations
+th.ISI = 0.001;                % <= 0.1% refractory period violations
 th.refractoryPeriod = 0.001;    % 1ms refractory period duration
-th.noiseOverlap
-th.isolation
+th.info = '>= th.SNR, <= th.ISI (frac violations/allISI), th.refractoryPeriod in s'; 
+% th.noiseOverlap
+% th.isolation
 
-if qualityMetrics 
+if qualityMetrics
     for d = 1:length(day)
         for br = 1:length(brainReg)
+            anclusterdir = fullfile(clusterdir, [animalID{d}, num2str(animal(d)), '_', num2str(day(d))], brainReg{br}, clusfolder);
             
+            recinfo.iden = animalID{d}; 
+            recinfo.index = [animal(d) day(d)]; 
+            recinfo.files = files{d}; 
+            recinfo.brainReg = brainReg{br}; 
+            
+            applyQualityMetrics(anclusterdir, recinfo, rewrite.qualitymetrics, th)
         end
     end
 end
