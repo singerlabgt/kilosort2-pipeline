@@ -21,15 +21,16 @@ clear; close all;
 % spike gadgets ALP 7/14/19
 
 %Nuri
-animal = 8;             
-day = 190716;
-files = {1:11};  
+animal = [8;8;9;9;9;9;9];             
+day = [190716; 190718; 190723; 190724; 190803; 190804; 190806];
+files = {1:11; 1:11; 1:7; 1:5; 1:13; 1:8; 1:13};  
 probeChannels = {1:32}; 
 brainReg = {'CA3'}; 
-animalID = 'N';
+animalID = ['N';'N'; 'N'; 'N'; 'N'; 'N'; 'N'];
 rawdatadir = '\\neuro-cloud\labs\singer\RawData\RigB_SpikeGadgets\'; 
 clusterdir = '\\neuro-cloud\labs\singer\Nuri\Clustering\';
 processeddatadir = '\\neuro-cloud\labs\singer\ProcessedData\VR_Novelty\';
+clusfolder = 'sorted\';
 
 %Test - Abby Intan
 % animal = 7;             
@@ -42,7 +43,6 @@ processeddatadir = '\\neuro-cloud\labs\singer\ProcessedData\VR_Novelty\';
 % clusterdir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\';
 % processeddatadir = 'Y:\singer\ProcessedData\Flicker_7Day_CA1CA3\';
 
-clusfolder = 'sorted\';
 
 %Test - Nuri Spike GAdgets
 % animal = 1;             
@@ -61,7 +61,7 @@ clusfolder = 'sorted\';
 % getSingleUnitTimes - run after manual curation in Phy2
 
 writeToBIN = 0; 
-getSingleUnitTimes = 1; 
+getSingleUnitTimes = 0; 
 getWFstruct = 1;
 qualityMetrics = 1; 
 
@@ -70,7 +70,7 @@ qualityMetrics = 1;
 % Otherwise, the pipeline will load up previously stored files if they 
 % exist. 
 
-rewrite.eeg = 0;
+rewrite.eeg = 1;
 rewrite.wf = 1;
 rewrite.qualitymetrics = 1;
 
