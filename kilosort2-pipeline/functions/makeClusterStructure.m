@@ -34,21 +34,21 @@ for br = 1:length(brainReg) %could move this loop outside of the function for co
     unitMaxChan = templateMaxChan(tempPerUnit(~isnan(tempPerUnit))+1);
     unitMaxChan = double(unitMaxChan(clusterGroup == 2)); %only good units
     
-    %create structure
-    rawclusters = struct('ID', num2cell(goodUnits), ...
-        'spikeInds', repmat({[]}, 1, length(goodUnits)),...
-        'sampRate', num2cell(props.sampRate*ones(1, length(goodUnits))), ...
-        'maxChan', num2cell(unitMaxChan'), 'info', repmat({'pre quality control metrics'}, 1, length(goodUnits)));
-    
+  
     %loop over recordings - this could be improved - how does Lu do it?
-    elapsedLength = 0;
     for f = 1:length(files)
+        %create structure
+        rawclusters = struct('ID', num2cell(goodUnits), ...
+            'spikeInds', repmat({[]}, 1, length(goodUnits)),...
+            'sampRate', num2cell(props.sampRate*ones(1, length(goodUnits))), ...
+            'maxChan', num2cell(unitMaxChan'), 'info', repmat({'pre quality control metrics'}, 1, length(goodUnits)));
+        
         for clu = 1:length(goodUnits)
             if f == 1
                 tempSpikeInds{clu} = spikeInds(spikeID == goodUnits(clu));
                 tempSpikeInds{clu} = double(tempSpikeInds{clu});
             else
-                tempSpikeInds{clu} = tempSpikeInds{clu} - elapsedLength; 
+                tempSpikeInds{clu} = tempSpikeInds{clu} - props.recLength(f-1); %align to start time of this recording
                 rawclusters(clu).spikeInds = [];
             end
             
@@ -59,10 +59,25 @@ for br = 1:length(brainReg) %could move this loop outside of the function for co
             end
             rawclusters(clu).file = files(f);
         end
-        elapsedLength = elapsedLength+props.recLength(f);
-        
         save([anclusterdir, 'rawclusters', num2str(files(f)), '.mat'], 'rawclusters')
     end
+    
+    %make structure will all spike times from all recordings
+    rawclusters_allrec = struct('ID', num2cell(goodUnits), ...
+        'spikeInds', repmat({[]}, 1, length(goodUnits)),...
+        'sampRate', num2cell(props.sampRate*ones(1, length(goodUnits))), ...
+        'maxChan', num2cell(unitMaxChan'), 'info', repmat({'all files. pre quality control metrics'}, 1, length(goodUnits)));
+    
+    for clu = 1:length(goodUnits)
+        tempSpikeInds{clu} = spikeInds(spikeID == goodUnits(clu));
+        tempSpikeInds{clu} = double(tempSpikeInds{clu});
+        
+        rawclusters_allrec(clu).spikeInds = tempSpikeInds{clu}; 
+        rawclusters(clu).file = files;
+    end
+    
+    save([anclusterdir, 'rawclusters_allrec.mat'], 'rawclusters_allrec')
+       
 end
 end
 
