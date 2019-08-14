@@ -19,7 +19,9 @@ recLength = zeros(length(fileNums),1);
 for f = 1:length(fileNums) %loop around desired files
     ind = strfind({fileNames.name}, strcat('recording', num2str(fileNums(f)),'_')); %added underscore(_) bc the number 1 appears in recordings 1, 10, 11, etc.
     ind = find(~cellfun(@isempty,ind)); %find index of correct rec file
+    data = [];
     if ~isempty(ind)
+        disp(['Extracting file ', num2str(f), ' of ', num2str(length(fileNums)) ' - file: ' num2str(fileNums(f))])
         rawdatafile = [rawdatadir, fileNames(ind).name];
         
         splits = strsplit(fileNames(ind).name, '.');

@@ -21,57 +21,58 @@ clear; close all;
 % spike gadgets ALP 7/14/19
 
 %Nuri
-animal = 9;             
-day = 190804;
-files = {1:8};  
-probeChannels = {1:32}; 
-brainReg = {'CA3'}; 
-animalID = 'N';
-rawdatadir = '\\neuro-cloud\labs\singer\RawData\RigB_SpikeGadgets\'; 
-clusterdir = '\\neuro-cloud\labs\singer\Nuri\Clustering\';
-processeddatadir = '\\neuro-cloud\labs\singer\ProcessedData\VR_Novelty\';
+% animal = 9;             
+% day = 190804;
+% files = {1:8};  
+% probeChannels = {1:32}; 
+% brainReg = {'CA3'}; 
+% animalID = 'N';
+% rawdatadir = '\\neuro-cloud\labs\singer\RawData\RigB_SpikeGadgets\'; 
+% clusterdir = '\\neuro-cloud\labs\singer\Nuri\Clustering\';
+% processeddatadir = '\\neuro-cloud\labs\singer\ProcessedData\VR_Novelty\';
 
 %Test - Abby Intan
 % animal = 7;             
 % day = 190214;
-% files = {1};  
+% files = {1:2};  
 % probeChannels = {33:64}; 
 % brainReg = {'CA1'}; 
 % animalID = {'A'};
 % rawdatadir = 'Y:\singer\RawData\Flicker_CA1CA3\'; 
-% clusterdir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\';
-% processeddatadir = 'Y:\singer\ProcessedData\Flicker_7Day_CA1CA3\';
+% clusterdir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\'; %this may be the same as processeddatadir
+% processeddatadir = 'Y:\singer\ProcessedData\Flicker_7Day_CA1CA3\'; %may be the same as above
 
-clusfolder = 'sorted\';
+
+
+% recinfo = struct('animal', animal
 
 %Test - Nuri Spike GAdgets
-% animal = 1;             
-% day = 190619;
-% files = {1};  
-% probeChannels = {1:32}; 
-% brainReg = {''}; 
-% animalID = {'N'};
-% rawdatadir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\CA3\'; 
-% clusterdir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\CA3\';
-% % processeddatadir = 'Y:\singer\ProcessedData\Flicker_7Day_CA1CA3\';
-% clusfolder = '';
-
+animal = 7;             
+day = 190619;
+files = {1:11};  
+probeChannels = {1:32}; 
+brainReg = {''}; 
+animalID = {'N'};
+rawdatadir = 'Y:\singer\RawData\RigB_SpikeGadgets\'; 
+clusterdir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\CA3\';
+% processeddatadir = 'Y:\singer\ProcessedData\Flicker_7Day_CA1CA3\';
+clusfolder = 'sorted\';
 %% Set run options
 % writeToBin - first step, run to get .bin for Kilosort2
 % getSingleUnitTimes - run after manual curation in Phy2
 
 writeToBIN = 0; 
-getSingleUnitTimes = 0; 
+getSingleUnitTimes = 1; 
 getWFstruct = 0;
-qualityMetrics = 1; 
+qualityMetrics = 0; 
 
 %% set rewriting options
 % set these options to force the code to rewrite the files specified below. 
 % Otherwise, the pipeline will load up previously stored files if they 
 % exist. 
 
-rewrite.eeg = 0;
-rewrite.wf = 0;
+rewrite.eeg = 1;
+rewrite.wf = 1;
 rewrite.qualitymetrics = 1;
 
 
@@ -79,8 +80,8 @@ rewrite.qualitymetrics = 1;
 
 if writeToBIN
     for d = 1:length(day)
-        anrawdatadir = [rawdatadir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\'];
-        anclusterdir = [clusterdir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anrawdatadir = [rawdatadir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anclusterdir = [clusterdir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\'];
         
         if ~exist(anclusterdir, 'dir'); mkdir(anclusterdir); end
         converttoBIN_K2(anrawdatadir, anclusterdir, files{d}, probeChannels, brainReg, clusfolder)
@@ -91,8 +92,8 @@ end
 
 if getSingleUnitTimes
     for d = 1:length(day)
-        anrawdatadir = [rawdatadir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\'];
-        anclusterdir = [clusterdir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anrawdatadir = [rawdatadir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anclusterdir = [clusterdir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\'];
         
         makeClusterStructure(anclusterdir, files{d}, brainReg, clusfolder)
     end
@@ -103,11 +104,11 @@ end
 if getWFstruct
     for d = 1:length(day)
         for br = 1:length(brainReg)
-            anprocesseddatadir = [processeddatadir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\', brainReg{br}, '\'];
-            anclusterdir = [clusterdir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\' brainReg{br}, '\',clusfolder];
+            anprocesseddatadir = [processeddatadir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\', brainReg{br}, '\'];
+            anclusterdir = [clusterdir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\' brainReg{br}, '\',clusfolder];
             figdir = fullfile(anclusterdir, 'figs');
             
-            recinfo.iden = animalID(d); 
+            recinfo.iden = animalID{d}; 
             recinfo.index = [animal(d) day(d)]; 
             recinfo.files = files{d}; 
             recinfo.brainReg = brainReg{br}; 
@@ -122,7 +123,7 @@ end
 % Things I want to do: isolation against other units
 
 th.SNR =  1;                    % >= 1 SNR
-th.ISI = 0.001;                % <= 0.1% refractory period violations
+th.ISI = 0.0001;                % <= 0.01% refractory period violations
 th.refractoryPeriod = 0.001;    % 1ms refractory period duration
 th.info = '>= th.SNR, <= th.ISI (frac violations/allISI), th.refractoryPeriod in s'; 
 % th.noiseOverlap

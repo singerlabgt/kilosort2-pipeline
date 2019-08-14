@@ -35,6 +35,9 @@ if ~isfile([anclusterdir, 'clustermetrics.mat']) || rewrite.wf
         clustermetrics(clu) = makeWFstructure(anprocesseddatadir, allfiles, clu, recinfo,...
             tAroundSpike, samprate, figdir);
     end
+    
+    %get stable cluster times for each unit 
+    
 end
 save([anclusterdir, 'clustermetrics.mat'], 'clustermetrics')
 end

@@ -1,4 +1,4 @@
-function fr = getstableclustertimes_gauss_K2(index, clusterdatadir, windowsize,...
+function fr = getstableclustertimes_gauss_K2(recinfo, samprate, windowsize,...
     mintimestable, plotexamples)
 %getstableclustertimes_gauss_K2
 %Inputs:   index - matrix of indices per depth/day
@@ -24,10 +24,8 @@ function fr = getstableclustertimes_gauss_K2(index, clusterdatadir, windowsize,.
 totaltime = 0;
 %Get firing rate
 
-for i = 1:size(index,1)
-    load([clusterdatadir,'recording', num2str(index(i,3)), '.mat'])
-    
-    for unit = 1:length(Neuron)
+for i = 1:size(recinfo.files,1)    
+    for unit = 1:length(allfiles{f}.rawclusters)
         if i == 1
             fr.totaltimes{unit} = [];
             fr.totaltimes{unit} = Neuron(unit).TS*1000;

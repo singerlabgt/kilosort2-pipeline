@@ -21,6 +21,7 @@ for i = 1:numRecs
     datafolder{i} = datapath;
 end
 
+recLength = zeros(1,numRecs); 
 % Save all as one big file
 for j = 1:numRecs
     % Map the directory
@@ -33,12 +34,11 @@ for j = 1:numRecs
     end
     numfiles=length(indrightfile);
     targetfile = [targetpath 'allrecordings.bin'];  
-    recLength = zeros(1,numRecs); 
     
     for i=1:numfiles
         %------send files to intan code to be processed---------
         fprintf('Loading RHD data from file %d of %d...\n',i,numfiles)
-        
+        data = [];
         % Get data from modified Intan code
         data = get_Intan_RHD2000_file_K2(datafolder{j}, ...
             files(indrightfile(i)).name,1,0, probechannels);

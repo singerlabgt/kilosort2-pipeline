@@ -5,7 +5,7 @@ function metrics = makeWFstructure(anprocesseddatadir, allfiles, clu, recinfo,..
 %   ALP 7/25/19
 
 spikeCount = 1;
-recLength = 0;
+recLength = [];
 isi = [];
 for f = 1:length(recinfo.files)
     %load WF filtered EEG
@@ -28,22 +28,22 @@ for f = 1:length(recinfo.files)
             isi = [isi diffinds];
         end
     end
-    recLength = recLength+length(filtdat);
+    recLength(f) = length(filtdat);
     clear filtdat
 end
 
-recLength = recLength./samprate; %in s
+recLengthAll = sum(recLength)./samprate; %in s
 metrics.ID = allfiles{1}.rawclusters(clu).ID;
 metrics.WF.mn = mean(tempWFs, 1, 'omitnan');
 metrics.WF.std = std(tempWFs, 0, 1, 'omitnan');
 metrics.snr = (max(metrics.WF.mn) - min(metrics.WF.mn))/mean(metrics.WF.std);
 metrics.WF.info = '1ms before and 2ms after';
 % metrics.peak2trough_ms = calcSpikewidth_K2(metrics.WF.mn, recinfo, allfiles{f}.rawclusters(clu).ID, samprate, figdir);
-metrics.firingrate = spikeCount/recLength; %in Hz
+metrics.firingrate = spikeCount/recLengthAll; %in Hz
 metrics.isi.all_ms = isi./(samprate/1000); %in ms
 metrics.isi_h = histc(metrics.isi.all_ms, 0:0.1:10);
 metrics.isi.edges_ms = 0:0.1:10; 
-metrics.numspikes = spikeIdx; 
+metrics.numspikes = spikeCount; 
 metrics.files = recinfo.files; 
 metrics.samprate = samprate; 
 %incorporate get stabletimes here
