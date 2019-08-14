@@ -34,7 +34,7 @@ spikewidthInfo.troughIdxDiff = troughIdx;
 spikewidthInfo.fullWFDiff = waveform;
 
 %% make sure peak2trough values are correct
-figure; hold on; 
+hold on; 
 plot(waveform);
 plot(peakIdx, waveform(peakIdx),'rs');
 plot(troughIdx, waveform(troughIdx),'ks');
@@ -48,5 +48,5 @@ figname = ['Cluster' num2str(clusIdx) '_peak2troughDiff'];
 %     pause
 % end
 savefigSP(recinfo.index, datadir, figname, recinfo.iden);
-
+clf
 end
