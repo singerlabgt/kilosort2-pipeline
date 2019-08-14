@@ -99,6 +99,7 @@ if getSingleUnitTimes
     end
 end
 
+
 %% get waveforms and cluster properties
 
 if getWFstruct
