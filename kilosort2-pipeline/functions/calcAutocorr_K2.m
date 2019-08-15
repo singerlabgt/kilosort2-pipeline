@@ -58,5 +58,5 @@ end
 fr.clusterID = {rawclusters.ID}; 
 
 %save structure
-save([clusterdir, 'autocorr.mat'], 'fr')
+save(fullfile(clusterdir, 'autocorr.mat'), 'fr')
 
