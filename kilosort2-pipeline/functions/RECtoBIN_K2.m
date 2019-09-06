@@ -8,11 +8,11 @@ function RECtoBIN_K2(rawdatadir, targetdir, dtype, fileNames, fileNums, channels
 %       fileNums: desired files to cluster
 %   ALP 7/13/19
 
-
-binFile = [targetdir, 'allrecordings.bin'];
-id = fopen(binFile, 'w'); %clear all preexisting content to overwrite
-fclose(id);
-clear id
+fclose('all');
+binFile = fullfile(targetdir, 'allrecordings.bin');
+if isfile(binFile) %to rewrite if bin file exists
+    delete(binFile)
+end
 
 recLength = zeros(length(fileNums),1);
 
@@ -43,15 +43,18 @@ for f = 1:length(fileNums) %loop around desired files
     else
         error(['File ', num2str(fileNums(f)), ' not found.'])
     end
-    
+     
     %write to allrecordings.bin
-    fid = fopen(binFile, 'a');
-    fwrite(fid, data.', dtype);
-    fclose(fid);
-    
-    recLength(f) = size(data,1);
-    clear data
-    
+    fid = fopen(binFile, 'a+'); %having problems with 'a' 
+    if fid > 0
+        fwrite(fid, data.', dtype);
+        fclose(fid);
+        
+        recLength(f) = size(data,1);
+        clear data
+    else 
+        disp('Invalid file identifier (fid < 0).')
+    end
 end
 
 props.recLength = recLength;

@@ -43,7 +43,7 @@ title(['Waveform ', recinfo.iden, ' ', num2str(recinfo.index(1)), ' ', num2str(r
     ' Cluster - ', num2str(clusIdx)]);
 
 %% save figures 
-datadir = fullfile(figdir, 'Waveforms\');
+datadir = fullfile(figdir, 'figsWaveforms\');
 figname = ['Cluster' num2str(clusIdx) '_peak2troughDiff'];
 % if ~exist([datadir filename iden num2str(dayindex(1)) '_' num2str(dayindex(2)) '.fig'])
 %     pause

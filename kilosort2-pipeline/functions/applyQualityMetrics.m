@@ -18,8 +18,9 @@ temp = temp'./[clustermetrics.numspikes];
 good_isi = temp <= th.ISI;
 isiexcl = sum(double(good_isi) == 0);
 disp([num2str(isiexcl), ' of ', num2str(length(clustermetrics)), ' excluded for > ' num2str(th.ISI*100),'% refractory violations'])
-
-good_final = good_snr == good_isi;
+temp = zeros(1, length(clustermetrics));
+temp((good_snr & good_isi)) = 1; %fixed bug when two logical values are equally zero, it gets included as a good unit when it shouldn't: NJ 19.09.06
+good_final = temp;
 totalexcl = sum(double(good_final) == 0);
 totalincl = sum(double(good_final) == 1);
 disp([num2str(totalexcl), ' of ', num2str(length(clustermetrics)), ' clusters excluded.'])
