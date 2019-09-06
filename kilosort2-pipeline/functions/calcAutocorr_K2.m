@@ -5,26 +5,24 @@ function fr = calcAutocorr_K2(clusterdir)
 %spiketimes NJ 08.14.19
 
 %INPUT
-    %clusterdir: directory to rawclusters.mat files
+%clusterdir: directory to rawclusters.mat files
 
 %OUTPUT (for each cluster)
-    %spiketrain
-    %autocorrelogram
-    %center of mass
-    %cell ID 
+%spiketrain
+%autocorrelogram
+%center of mass
+%cell ID
 
-%load sorting props 
+%fixed a bug related to indices, now uses spike indicies of all recs per
+%unit 09.06.19
+
+%load sorting props
 load(fullfile(clusterdir, 'kilosort', 'sortingprops.mat'))
 
-for f = 1:length(props.recLength)
-    load(fullfile(clusterdir, ['rawclusters' num2str(f)]))
-    for unit = 1:size(rawclusters,2)
-        if f == 1
-            fr.totalspikes{unit} = rawclusters(unit).spikeInds'; %change vertical to horizontal structure
-        else
-            fr.totalspikes{unit} = [fr.totalspikes{unit} rawclusters(unit).spikeInds'];
-        end
-    end
+
+load(fullfile(clusterdir, 'rawclusters_allrec.mat')) %edit from rawclusters(recNum) bc indices all restart from 1: NJ 09.06.19
+for unit = 1:size(rawclusters_allrec,2)
+    fr.totalspikes{unit} = rawclusters_allrec(unit).spikeInds'; %change vertical to horizontal structure
 end
 
 %total length of recording day, same for all units
@@ -54,8 +52,8 @@ for unit = 1:length(fr.autocorr)
     fr.centerofmass{unit} = (sum(fr.autocorr{unit}(lag+2:end).*sampN)/sum(fr.autocorr{unit}(lag+2:end)))/stepsize;
 end
 
-%add raw cluster ID for autocorr info 
-fr.clusterID = {rawclusters.ID}; 
+%add raw cluster ID for autocorr info
+fr.clusterID = {rawclusters_allrec.ID};
 
 %save structure
 save(fullfile(clusterdir, 'autocorr.mat'), 'fr')

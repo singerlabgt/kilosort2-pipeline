@@ -61,7 +61,7 @@ clusfolder = 'sorted\';
 % writeToBin - first step, run to get .bin for Kilosort2
 % getSingleUnitTimes - run after manual curation in Phy2
 
-writeToBIN = 0; 
+writeToBIN = 1; 
 getSingleUnitTimes = 1; 
 getWFstruct = 0;
 qualityMetrics = 0; 
@@ -92,8 +92,8 @@ end
 
 if getSingleUnitTimes
     for d = 1:length(day)
-        anrawdatadir = [rawdatadir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\'];
-        anclusterdir = [clusterdir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anrawdatadir = [rawdatadir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\'];
+        anclusterdir = [clusterdir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\'];
         
         makeClusterStructure(anclusterdir, files{d}, brainReg, clusfolder)
     end
@@ -105,11 +105,11 @@ end
 if getWFstruct
     for d = 1:length(day)
         for br = 1:length(brainReg)
-            anprocesseddatadir = [processeddatadir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\', brainReg{br}, '\'];
-            anclusterdir = [clusterdir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\' brainReg{br}, '\',clusfolder];
+            anprocesseddatadir = [processeddatadir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\', brainReg{br}, '\'];
+            anclusterdir = [clusterdir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\' brainReg{br}, '\',clusfolder];
             figdir = fullfile(anclusterdir, 'figs');
             
-            recinfo.iden = animalID{d}; 
+            recinfo.iden = animalID(d); 
             recinfo.index = [animal(d) day(d)]; 
             recinfo.files = files{d}; 
             recinfo.brainReg = brainReg{br}; 
@@ -124,7 +124,7 @@ end
 % Things I want to do: isolation against other units
 
 th.SNR =  1;                    % >= 1 SNR
-th.ISI = 0.0001;                % <= 0.01% refractory period violations
+th.ISI = 0.008;                % <= 0.8% refractory period violations
 th.refractoryPeriod = 0.001;    % 1ms refractory period duration
 th.info = '>= th.SNR, <= th.ISI (frac violations/allISI), th.refractoryPeriod in s'; 
 % th.noiseOverlap
@@ -133,9 +133,9 @@ th.info = '>= th.SNR, <= th.ISI (frac violations/allISI), th.refractoryPeriod in
 if qualityMetrics
     for d = 1:length(day)
         for br = 1:length(brainReg)
-            anclusterdir = fullfile(clusterdir, [animalID{d}, num2str(animal(d)), '_', num2str(day(d))], brainReg{br}, clusfolder);
+            anclusterdir = fullfile(clusterdir, [animalID(d), num2str(animal(d)), '_', num2str(day(d))], brainReg{br}, clusfolder);
             
-            recinfo.iden = animalID{d}; 
+            recinfo.iden = animalID(d); 
             recinfo.index = [animal(d) day(d)]; 
             recinfo.files = files{d}; 
             recinfo.brainReg = brainReg{br}; 
