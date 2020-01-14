@@ -28,7 +28,7 @@ for j = 1:numRecs
     files=dir(datafolder{j});
     indrightfile=[];
     for f=1:length(files)
-        if strfind(files(f).name, strcat('recording', num2str(filenum(j))))
+        if strfind(files(f).name, strcat('recording', num2str(filenum(j)), '_'))
             indrightfile=[indrightfile; f]; % get inds ofdesired files
         end
     end
