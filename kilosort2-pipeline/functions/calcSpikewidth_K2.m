@@ -1,4 +1,4 @@
-function spikewidth = calcSpikewidth_K2(WF, recinfo, clusID, samprate, figdir)
+function spikewidth = calcSpikewidth_K2(WF, recinfo, clusID, clusIdx, samprate, figdir)
 %this function calculates spikewidth via peak2trough where the trough is
 %the first time the differential is 0 or is closest to 0
 %SP 4.27.18
@@ -29,6 +29,7 @@ waveform = waveformresampled;
 
 %store the info
 spikewidth.ID =clusID;
+spikewidth.ind = clusIdx; 
 spikewidth.peak2troughDiff = sw;
 spikewidth.peakIdxDiff = peakIdx;
 spikewidth.troughIdxDiff = troughIdx;
@@ -40,10 +41,10 @@ plot(waveform);
 plot(peakIdx, waveform(peakIdx),'rs');
 plot(troughIdx, waveform(troughIdx),'ks');
 title(['Waveform ', recinfo.iden, ' ', num2str(recinfo.index(1)), ' ', num2str(recinfo.index(2)),...
-    ' Cluster - ', num2str(clusID)]);
+    ' Cluster - ', num2str(clusID), ' - MatIndex: ', num2str(clusIdx)]);
 
 %% save figures 
-datadir = fullfile(figdir, 'figsWaveforms\');
+datadir = fullfile(figdir, 'exampleWaveforms\');
 figname = ['Cluster' num2str(clusID) '_peak2troughDiff'];
 % if ~exist([datadir filename iden num2str(dayindex(1)) '_' num2str(dayindex(2)) '.fig'])
 %     pause
