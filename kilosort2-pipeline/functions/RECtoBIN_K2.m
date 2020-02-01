@@ -37,8 +37,8 @@ for f = 1:length(fileNums) %loop around desired files
         sampRate = str2double(configInfo.samplingRate);
         
         %import channels
-        data = importChannels(rawdatafile, numChannels, channels,...
-            sampRate, headerSize); %import channels func from Trodes code
+        data = importChannels2020(rawdatafile, numChannels, channels,...
+            sampRate, headerSize); %import channels func from Trodes code - updated for 64chan data; NJ 01.31.20
         
     else
         error(['File ', num2str(fileNums(f)), ' not found.'])

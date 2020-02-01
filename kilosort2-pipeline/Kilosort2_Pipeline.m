@@ -47,22 +47,22 @@ clear; close all;
 % recinfo = struct('animal', animal
 
 %Test - Nuri Spike GAdgets
-animal = 7;             
-day = 190619;
-files = {1:11};  
-probeChannels = {1:32}; 
-brainReg = {''}; 
+animal = 11;             
+day = 200130;
+files = {1:9};  
+probeChannels = {1:64}; 
+brainReg = {'CA3'}; 
 animalID = {'N'};
-rawdatadir = 'Y:\singer\RawData\RigB_SpikeGadgets\'; 
-clusterdir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\CA3\';
-% processeddatadir = 'Y:\singer\ProcessedData\Flicker_7Day_CA1CA3\';
+rawdatadir = '\\neuro-cloud\labs\singer\RawData\VR_Novelty\'; 
+clusterdir = '\\neuro-cloud\labs\singer\ProcessedData\VR_Novelty\';
+processeddatadir = '\\neuro-cloud\labs\singer\ProcessedData\VR_Novelty\';
 clusfolder = 'sorted\';
 %% Set run options
 % writeToBin - first step, run to get .bin for Kilosort2
 % getSingleUnitTimes - run after manual curation in Phy2
 
 writeToBIN = 1; 
-getSingleUnitTimes = 1; 
+getSingleUnitTimes = 0; 
 getWFstruct = 0;
 qualityMetrics = 0; 
 
@@ -109,10 +109,10 @@ if getWFstruct
             anclusterdir = [clusterdir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\' brainReg{br}, '\',clusfolder];
             figdir = fullfile(anclusterdir, 'figs');
             
-            recinfo.iden = animalID(d); 
-            recinfo.index = [animal(d) day(d)]; 
-            recinfo.files = files{d}; 
-            recinfo.brainReg = brainReg{br}; 
+            recinfo.iden = animalID(d);
+            recinfo.index = [animal(d) day(d)];
+            recinfo.files = files{d};
+            recinfo.brainReg = brainReg{br};
             
             getWaveForms_K2(anprocesseddatadir, anclusterdir, recinfo, figdir, rewrite)
         end
