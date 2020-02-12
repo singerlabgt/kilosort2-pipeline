@@ -48,11 +48,19 @@ clear; close all;
 
 %Test - Nuri Spike GAdgets
 animal = 11;             
+<<<<<<< Updated upstream
 day = 200130;
 files = {1:9};  
 probeChannels = {1:64}; 
 brainReg = {'CA3'}; 
 animalID = {'N'};
+=======
+day = 200131;
+files = {1:7};  
+probeChannels = {1:64}; 
+brainReg = {'CA3'}; 
+animalID = 'N';
+>>>>>>> Stashed changes
 rawdatadir = '\\neuro-cloud\labs\singer\RawData\VR_Novelty\'; 
 clusterdir = '\\neuro-cloud\labs\singer\ProcessedData\VR_Novelty\';
 processeddatadir = '\\neuro-cloud\labs\singer\ProcessedData\VR_Novelty\';
@@ -61,19 +69,26 @@ clusfolder = 'sorted\';
 % writeToBin - first step, run to get .bin for Kilosort2
 % getSingleUnitTimes - run after manual curation in Phy2
 
+<<<<<<< Updated upstream
 writeToBIN = 1; 
 getSingleUnitTimes = 0; 
 getWFstruct = 0;
 qualityMetrics = 0; 
+=======
+writeToBIN = 0; 
+getSingleUnitTimes = 1; 
+getWFstruct = 1;
+qualityMetrics = 1; 
+>>>>>>> Stashed changes
 
 %% set rewriting options
 % set these options to force the code to rewrite the files specified below. 
 % Otherwise, the pipeline will load up previously stored files if they 
 % exist. 
 
-rewrite.eeg = 1;
-rewrite.wf = 1;
-rewrite.qualitymetrics = 1;
+rewrite.eeg = 0;
+rewrite.wf = 0;
+rewrite.qualitymetrics = 0;
 
 
 %% write raw recording files to BIN for kilosort2
