@@ -49,8 +49,13 @@ clear; close all;
 %Test - Nuri Spike GAdgets
 animal = 11;             
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 day = 200130;
 files = {1:9};  
+=======
+day = 200131;
+files = {1:7};  
+>>>>>>> Stashed changes
 probeChannels = {1:64}; 
 brainReg = {'CA3'}; 
 animalID = {'N'};
@@ -70,15 +75,21 @@ clusfolder = 'sorted\';
 % getSingleUnitTimes - run after manual curation in Phy2
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 writeToBIN = 1; 
 getSingleUnitTimes = 0; 
 getWFstruct = 0;
 qualityMetrics = 0; 
 =======
+=======
+>>>>>>> Stashed changes
 writeToBIN = 0; 
 getSingleUnitTimes = 1; 
 getWFstruct = 1;
 qualityMetrics = 1; 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 %% set rewriting options
