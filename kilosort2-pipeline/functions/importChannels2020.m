@@ -1,4 +1,4 @@
-function [recData, timestamps] = importChannels(filename,NumChannels, channels,samplingRate,headerSize, configExists)  
+function [recData, timestamps] = importChannels2020(filename,NumChannels, channels,samplingRate,headerSize, configExists)  
 
 
 %[recData, timestamps] = importChannels(filename,NumChannels, channels,samplingRate,headerSize, configExists) )  
@@ -52,7 +52,7 @@ for i = 1:length(channels)
     channelData = double(channelData); % removed multiplying by -1 02.04.20 bc inverted spikes were not being detected
     channelData = channelData * 12780; %convert to uV (for Intan digital chips)
     channelData = channelData / 65536;
-    recData = [recData channelData];
+    recData(i,:) = channelData;
        
 end
 
