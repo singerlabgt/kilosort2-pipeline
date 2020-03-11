@@ -18,8 +18,6 @@ function fr = calcAutocorr_K2(clusterdir)
 
 %load sorting props
 load(fullfile(clusterdir, 'kilosort', 'sortingprops.mat'))
-
-
 load(fullfile(clusterdir, 'rawclusters_allrec.mat')) %edit from rawclusters(recNum) bc indices all restart from 1: NJ 09.06.19
 for unit = 1:size(rawclusters_allrec,2)
     fr.totalspikes{unit} = rawclusters_allrec(unit).spikeInds'; %change vertical to horizontal structure

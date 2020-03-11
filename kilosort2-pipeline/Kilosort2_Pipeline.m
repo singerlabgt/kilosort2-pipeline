@@ -9,60 +9,19 @@
 clear; close all;
 
 %% Set parameters
-% animal and day: 1xN vect of same length 
-% files: cell array with each element containing 1xN vect of desired files
-% probeChannels: cell array with each element containing 1xN vect of 
-%   channels of desired region. channels should be 0 based. 
-% brainReg: cell array of brain regions with same length as probeChannels. 
-%    can be {''} if desired
-% animalID: cell array of ID letters with same length as brainReg
-%
 % NOTE: multiple brainReg only debugged for INTAN, need to implement for
 % spike gadgets ALP 7/14/19
 
-%Nuri
-% animal = 9;             
-% day = 190804;
-% files = {1:8};  
-% probeChannels = {1:32}; 
-% brainReg = {'CA3'}; 
-% animalID = 'N';
-% rawdatadir = '\\neuro-cloud\labs\singer\RawData\RigB_SpikeGadgets\'; 
-% clusterdir = '\\neuro-cloud\labs\singer\Nuri\Clustering\';
-% processeddatadir = '\\neuro-cloud\labs\singer\ProcessedData\VR_Novelty\';
-
-%Test - Abby Intan
-% animal = 7;             
-% day = 190214;
-% files = {1:2};  
-% probeChannels = {33:64}; 
-% brainReg = {'CA1'}; 
-% animalID = {'A'};
-% rawdatadir = 'Y:\singer\RawData\Flicker_CA1CA3\'; 
-% clusterdir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\'; %this may be the same as processeddatadir
-% processeddatadir = 'Y:\singer\ProcessedData\Flicker_7Day_CA1CA3\'; %may be the same as above
-
-
-
-% recinfo = struct('animal', animal
-
-%Test - Nuri Spike GAdgets
-animal = 7;             
-day = 190619;
-files = {1:11};  
-probeChannels = {1:32}; 
-brainReg = {''}; 
-animalID = {'N'};
-rawdatadir = 'Y:\singer\RawData\RigB_SpikeGadgets\'; 
-clusterdir = 'C:\Users\apaulson3\Desktop\KilosortTesting\Spike Gadgets\CA3\';
-% processeddatadir = 'Y:\singer\ProcessedData\Flicker_7Day_CA1CA3\';
-clusfolder = 'sorted\';
+[params, dirs] = userProfiles_K2pipeline('Abby', 'ChronicFlicker');
+params.animal = [22];
+params.day = [200202];
+params.files = {1:3};
 %% Set run options
 % writeToBin - first step, run to get .bin for Kilosort2
 % getSingleUnitTimes - run after manual curation in Phy2
 
 writeToBIN = 1; 
-getSingleUnitTimes = 1; 
+getSingleUnitTimes = 0; 
 getWFstruct = 0;
 qualityMetrics = 0; 
 
@@ -71,7 +30,7 @@ qualityMetrics = 0;
 % Otherwise, the pipeline will load up previously stored files if they 
 % exist. 
 
-rewrite.eeg = 1;
+rewrite.eeg = 0;
 rewrite.wf = 1;
 rewrite.qualitymetrics = 1;
 
@@ -79,23 +38,24 @@ rewrite.qualitymetrics = 1;
 %% write raw recording files to BIN for kilosort2
 
 if writeToBIN
-    for d = 1:length(day)
-        anrawdatadir = [rawdatadir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\'];
-        anclusterdir = [clusterdir, animalID{d}, num2str(animal(d)), '_', num2str(day(d)), '\'];
+    for d = 1:length(params.day)
+        anrawdatadir = [dirs.rawdatadir, params.animalID{d}, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
+        tempfiledir = [dirs.processeddatadir, params.animalID{d}, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
+        anclusterdir = [dirs.clusterdir, params.animalID{d}, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
         
         if ~exist(anclusterdir, 'dir'); mkdir(anclusterdir); end
-        converttoBIN_K2(anrawdatadir, anclusterdir, files{d}, probeChannels, brainReg, clusfolder)
+        converttoBIN_K2(anrawdatadir, anclusterdir, params.files{d}, params.probeChannels, params.brainReg, dirs.clusfolder)
     end
 end
 
 %% get single unit information and times
 
 if getSingleUnitTimes
-    for d = 1:length(day)
-        anrawdatadir = [rawdatadir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\'];
-        anclusterdir = [clusterdir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\'];
+    for d = 1:length(params.day(d))
+        anrawdatadir = [dirs.rawdatadir, params.animalID{d}, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
+        anclusterdir = [dirs.clusterdir, params.animalID{d}, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
         
-        makeClusterStructure(anclusterdir, files{d}, brainReg, clusfolder)
+        makeClusterStructure(anclusterdir, params.files{d}, params.brainReg, clusfolder, numShanks)
     end
 end
 
@@ -103,16 +63,16 @@ end
 %% get waveforms and cluster properties
 
 if getWFstruct
-    for d = 1:length(day)
-        for br = 1:length(brainReg)
-            anprocesseddatadir = [processeddatadir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\', brainReg{br}, '\'];
-            anclusterdir = [clusterdir, animalID(d), num2str(animal(d)), '_', num2str(day(d)), '\' brainReg{br}, '\',clusfolder];
+    for d = 1:length(params.day(d))
+        for br = 1:length(params.brainReg)
+            anprocesseddatadir = [dirs.processeddatadir, params.animalID{d}, num2str(params.animal(d)), '_', num2str(params.day(d)), '\', params.brainReg{br}, '\'];
+            anclusterdir = [dirs.clusterdir, params.animalID{d}, num2str(params.animal(d)), '_', num2str(params.day(d)), '\' params.brainReg{br}, '\', clusfolder];
             figdir = fullfile(anclusterdir, 'figs');
             
-            recinfo.iden = animalID(d); 
-            recinfo.index = [animal(d) day(d)]; 
-            recinfo.files = files{d}; 
-            recinfo.brainReg = brainReg{br}; 
+            recinfo.iden = params.animalID{d}; 
+            recinfo.index = [params.animal(d) params.day(d)]; 
+            recinfo.files = params.files{d}; 
+            recinfo.brainReg = params.brainReg{br}; 
             
             getWaveForms_K2(anprocesseddatadir, anclusterdir, recinfo, figdir, rewrite)
         end
@@ -131,14 +91,14 @@ th.info = '>= th.SNR, <= th.ISI (frac violations/allISI), th.refractoryPeriod in
 % th.isolation
 
 if qualityMetrics
-    for d = 1:length(day)
-        for br = 1:length(brainReg)
-            anclusterdir = fullfile(clusterdir, [animalID(d), num2str(animal(d)), '_', num2str(day(d))], brainReg{br}, clusfolder);
+    for d = 1:length(params.day(d))
+        for br = 1:length(params.brainReg)
+            anclusterdir = fullfile(dirs.clusterdir, [params.animalID{d}, num2str(params.animal(d)), '_', num2str(params.day(d))], params.brainReg{br}, clusfolder);
             
-            recinfo.iden = animalID(d); 
-            recinfo.index = [animal(d) day(d)]; 
-            recinfo.files = files{d}; 
-            recinfo.brainReg = brainReg{br}; 
+            recinfo.iden = params.animalID{d}; 
+            recinfo.index = [params.animal(d) params.day(d)]; 
+            recinfo.files = params.files{d}; 
+            recinfo.brainReg = params.brainReg{br}; 
             
             applyQualityMetrics(anclusterdir, recinfo, rewrite.qualitymetrics, th)
         end
