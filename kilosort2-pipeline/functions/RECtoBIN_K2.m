@@ -53,8 +53,8 @@ for f = 1:length(fileNums) %loop around desired files
         
         %create data structure for Kilosort: nChannels x nTimePoints
         for nTrode = 1:numChannels
-            cd (fullfile(rawdatadir, ['recording' num2str(f) '.LFP'])) %navigate into rec files
-            temp = readTrodesExtractedDataFile(['recording' num2str(f) '.LFP_nt' num2str(nTrode) 'ch1.dat']);
+            cd (fullfile(rawdatadir, ['recording' num2str(ind) '.LFP'])) %navigate into rec files
+            temp = readTrodesExtractedDataFile(['recording' num2str(ind) '.LFP_nt' num2str(nTrode) 'ch1.dat']);
             temp = temp.fields.data .* temp.voltage_scaling; %apply scaling factor to convert to uV
             
             data(nTrode,:) = temp;

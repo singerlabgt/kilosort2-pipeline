@@ -44,7 +44,8 @@ trodesPath = fileparts(trodesPath);
 %windows vs mac/linux
 disp(['"',fullfile(trodesPath,'exportLFP'),'"', recFileString, ' -output ', fileNameMask]);
 if ispc
-    eval(['!"',fullfile(trodesPath,'exportLFP'),'"', recFileString, ' -usespikefilters 0 -lowpass -1 -highpass -1 -userefs 0 -outputrate 30000 -output ', fileNameMask]);
+    eval(['!"',fullfile(trodesPath,'exportLFP'),'"', recFileString, ' -abortbaddata 0 -usespikefilters 0 -lowpass -1 -highpass -1 -userefs 0 -outputrate 30000 -output ', fileNameMask]);
+    eval(['!"',fullfile(trodesPath,'exportanalog'),'"', recFileString, ' -output ', fileNameMask]);
 else
     escapeChar = '\ ';
     trodesPath = strrep(trodesPath, ' ', escapeChar);
