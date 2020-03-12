@@ -2,7 +2,7 @@
 % Singer Lab - July 2019
 %
 % This pipeline creates .BIN files for Kilosort2 clustering, saves
-% sorted spike structure output, and applies automatic curation metrics. 
+% sorted spike structure output, and applies automatic curation metrics.
 %
 % ALP 7/01/19
 
@@ -16,6 +16,8 @@ clear; close all;
 params.animal = [22];
 params.day = [200202];
 params.files = {1:3};
+
+
 %% Set run options
 % writeToBin - first step, run to get .bin for Kilosort2
 % getSingleUnitTimes - run after manual curation in Phy2
@@ -26,13 +28,13 @@ getWFstruct = 0;
 qualityMetrics = 0; 
 
 %% set rewriting options
-% set these options to force the code to rewrite the files specified below. 
-% Otherwise, the pipeline will load up previously stored files if they 
-% exist. 
+% set these options to force the code to rewrite the files specified below.
+% Otherwise, the pipeline will load up previously stored files if they
+% exist.
 
 rewrite.eeg = 0;
 rewrite.wf = 1;
-rewrite.qualitymetrics = 1;
+rewrite.qualitymetrics = 0;
 
 
 %% write raw recording files to BIN for kilosort2
@@ -51,11 +53,13 @@ end
 %% get single unit information and times
 
 if getSingleUnitTimes
+
     for d = 1:length(params.day(d))
         anrawdatadir = [dirs.rawdatadir, params.animalID{d}, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
         anclusterdir = [dirs.clusterdir, params.animalID{d}, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
         
         makeClusterStructure(anclusterdir, params.files{d}, params.brainReg, clusfolder, numShanks)
+
     end
 end
 
@@ -73,6 +77,7 @@ if getWFstruct
             recinfo.index = [params.animal(d) params.day(d)]; 
             recinfo.files = params.files{d}; 
             recinfo.brainReg = params.brainReg{br}; 
+
             
             getWaveForms_K2(anprocesseddatadir, anclusterdir, recinfo, figdir, rewrite)
         end
@@ -86,7 +91,7 @@ end
 th.SNR =  1;                    % >= 1 SNR
 th.ISI = 0.008;                % <= 0.8% refractory period violations
 th.refractoryPeriod = 0.001;    % 1ms refractory period duration
-th.info = '>= th.SNR, <= th.ISI (frac violations/allISI), th.refractoryPeriod in s'; 
+th.info = '>= th.SNR, <= th.ISI (frac violations/allISI), th.refractoryPeriod in s';
 % th.noiseOverlap
 % th.isolation
 

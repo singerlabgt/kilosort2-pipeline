@@ -18,3 +18,4 @@ octave-workspace
 
 #R autosave
 .Rhistory
+kilosort2-pipeline/functions/importChannels_NJ.m

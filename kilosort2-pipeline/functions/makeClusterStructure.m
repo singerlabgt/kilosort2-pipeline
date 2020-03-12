@@ -18,10 +18,10 @@ for br = 1:length(brainReg) %could move this loop outside of the function for co
 
     templates = readNPY([ankilosortdir, 'templates.npy']);
     spikeTemplates = readNPY([ankilosortdir, 'spike_templates.npy']);
-    channelMap = readNPY([ankilosortdir, 'channel_map.npy']);
+    channelMap = readNPY([ankilosortdir, 'channel_map.npy']); %0-based 
     params = loadParamsPy([ankilosortdir, 'params.py']);
     load([ankilosortdir, 'sortingprops.mat'], 'props')
-
+    
     %only units classified as "good"
     goodUnits = clusterID(clusterGroup == 2);
     
@@ -34,6 +34,11 @@ for br = 1:length(brainReg) %could move this loop outside of the function for co
     unitMaxChan = templateMaxChan(tempPerUnit(~isnan(tempPerUnit))+1);
     unitMaxChan = double(unitMaxChan(clusterGroup == 2)); %only good units
     
+    %for SpikeGadgets, use hardware channel numbers for maxChan - NJ 03.10.2020
+    if isfield(props, 'hw_chan')
+        channelMap = props.hw_chan; %0-based hwChan numbers (folder names)
+        unitMaxChan = channelMap(unitMaxChan + 1); %have to add 1 to unitMaxChan to use as indices 
+    end
   
     %loop over recordings - this could be improved - how does Lu do it?
     for f = 1:length(files)
