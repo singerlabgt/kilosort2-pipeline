@@ -1,4 +1,4 @@
-function fr = calcAutocorr_K2(clusterdir)
+function fr = calcAutocorr_K2(clusterdir, recinfo, unitIDs)
 %this function calculates the autocorrelogram of clusters from a recording
 %SP 4.16.18
 %modified to use spike indicies to calculate the autocorrelograms and not
@@ -13,45 +13,58 @@ function fr = calcAutocorr_K2(clusterdir)
 %center of mass
 %cell ID
 
-%fixed a bug related to indices, now uses spike indicies of all recs per
-%unit 09.06.19
+%NJ updated 03.12.20 to get good units by default, if not all pre-quality
+%units
 
 %load sorting props
 load(fullfile(clusterdir, 'kilosort', 'sortingprops.mat'))
-load(fullfile(clusterdir, 'rawclusters_allrec.mat')) %edit from rawclusters(recNum) bc indices all restart from 1: NJ 09.06.19
-for unit = 1:size(rawclusters_allrec,2)
-    fr.totalspikes{unit} = rawclusters_allrec(unit).spikeInds'; %change vertical to horizontal structure
-end
 
+%use only post-quality check units if exists, and rawclusters if not
+if isfile(fullfile(clusterdir, 'goodclusters_allrec.mat'))
+    load(fullfile(clusterdir, 'goodclusters_allrec.mat'))
+    clusters = goodclusters_allrec;
+else
+    load(fullfile(clusterdir, 'rawclusters_allrec.mat')) %edit from rawclusters(recNum) bc indices all restart from 1: NJ 09.06.19
+    clusters = rawclusters_allrec;
+end
+    
 %total length of recording day, same for all units
 totalsamples = sum(props.recLength);
 
-for unit = 1:size(fr.totalspikes,2)
+
+fr = struct('ID', repmat({[]}, 1, length(unitIDs)), ...
+    'autocorr', repmat({[]}, 1, length(unitIDs)),...
+    'centerofmass', repmat({[]}, 1, length(unitIDs))); 
+
+for unit = 1:length(unitIDs)
+    
+    fr(unit).ID = unitIDs(unit);
+    
+    totalspikes = clusters(unit).spikeInds; %change vertical to horizontal structure
     %make the spike train - using indices instead of times
     stepsize = 5 * props.sampRate / 1000; %number of samples for 5ms binsize
     spiketrainedges = 0:stepsize:totalsamples; %5ms bins
-    fr.spiketrain{unit} = histc(fr.totalspikes{unit}, spiketrainedges);
+    spiketrain = histcounts(totalspikes, spiketrainedges);
     
     %get the autocorr
     lag_num = 50 * props.sampRate / 1000; %number of samples for 50ms
     lag = lag_num/stepsize; %in bins
-    fr.autocorr{unit} = xcorr(fr.spiketrain{unit},lag);
-    fr.autocorr{unit}(lag+1) = 0;
+    autocorr{unit} = xcorr(spiketrain,lag);
+    autocorr{unit}(lag+1) = 0;
     
     %eliminate ones with not enough spikes
-    if max(fr.autocorr{unit}) < 10
-        fr.autocorr{unit} = nan(1,length(fr.autocorr{unit}));
+    if max(autocorr{unit}) < 10
+        autocorr{unit} = nan(1,length(autocorr{unit}));
     end
+    
+    fr(unit).autocorr = autocorr{unit};
+    
+    %get the first moment of the autocorr
+    sampN = stepsize:stepsize:lag_num;
+    
+    centerofmass{unit} = (sum(autocorr{unit}(lag+2:end).*sampN)/sum(autocorr{unit}(lag+2:end)))/stepsize;
+    fr(unit).centerofmass = centerofmass{unit};
 end
-
-%get the first moment of the autocorr
-sampN = stepsize:stepsize:lag_num;
-for unit = 1:length(fr.autocorr)
-    fr.centerofmass{unit} = (sum(fr.autocorr{unit}(lag+2:end).*sampN)/sum(fr.autocorr{unit}(lag+2:end)))/stepsize;
-end
-
-%add raw cluster ID for autocorr info
-fr.clusterID = {rawclusters_allrec.ID};
 
 %save structure
 save(fullfile(clusterdir, 'autocorr.mat'), 'fr')
