@@ -23,8 +23,9 @@ for f = 1:length(recinfo.files)
         %eliminate spikes less than 1s into rec file && index  + 2ms after
         %spike does not go over the filtdat boundary
         if (currentIdx/samprate > 1.0) && ((currentIdx + tAroundSpike(2)) < length(filtdat))
-            %look for minimum amplitude [-10 10] samples around spikeIdx form K2
-            a = currentIdx - 10 : currentIdx + 10; 
+            %look for minimum amplitude +/- 0.2ms around the K2 spikeIdx
+            nSamps = round(0.2 / (1/samprate *1000));
+            a = currentIdx - nSamps : currentIdx + nSamps; 
             b = filtdat(a) == min(filtdat(a));
             minIdx = a(b); %index of minimum waveform amplitude
             waveforminds = round(minIdx-tAroundSpike(1)):round(minIdx+tAroundSpike(2));
