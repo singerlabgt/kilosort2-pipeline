@@ -37,7 +37,6 @@ clusfolder = 'sorted\';
     spreadsheetdir,'CA3', 1);
 allindex = allindex(ismember(allindex(:,1), animal) & allindex(:,4) ~= 0, :);
 day = unique(allindex(:,2)); %recording days
-
 animalID = repmat({'N'}, 1, length(day));
 
 %% Set run options
@@ -45,8 +44,8 @@ animalID = repmat({'N'}, 1, length(day));
 % getSingleUnitTimes - run after manual curation in Phy2
 
 writeToBIN = 0;
-getSingleUnitTimes = 1;
-getWFstruct = 1;
+getSingleUnitTimes = 0;
+getWFstruct = 0;
 qualityMetrics = 1;
 
 %% set rewriting options
@@ -56,7 +55,7 @@ qualityMetrics = 1;
 
 rewrite.eeg = 1;
 rewrite.wf = 1;
-rewrite.qualitymetrics = 0;
+rewrite.qualitymetrics = 1;
 
 
 %% write raw recording files to BIN for kilosort2
@@ -124,9 +123,9 @@ if qualityMetrics
         files = allindex(ismember(allindex(:,2), day(d)), 3);
         animal = unique(allindex(ismember(allindex(:,2), day(d)), 1));
         for br = 1:length(brainReg)
-            anclusterdir = fullfile(clusterdir, [animalID(d), num2str(animal), '_', num2str(day(d))], brainReg{br}, clusfolder);
+            anclusterdir = fullfile(clusterdir, [animalID{d}, num2str(animal), '_', num2str(day(d))], brainReg{br}, clusfolder);
             
-            recinfo.iden = animalID(d);
+            recinfo.iden = animalID{d};
             recinfo.index = [animal day(d)];
             recinfo.files = files;
             recinfo.brainReg = brainReg{br};
