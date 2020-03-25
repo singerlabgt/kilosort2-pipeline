@@ -1,13 +1,16 @@
 function metrics = makeWFstructure(anprocesseddatadir, allfiles, clu, recinfo,...
-    tAroundSpike, samprate, figdir)
+    tAroundSpike, props, figdir)
 %makeWFstructure Get mean waveform and some properties about it for
 %curation and cell type classification.
+%   Based on loadwaveforms.m SMP
 %   ALP 7/25/19
 
 spikeCount = 1;
 recLength = [];
 isi = [];
 tempWFs = [];
+samprate = props.sampRate;
+
 for f = 1:length(recinfo.files)
     %load WF filtered EEG
     load([anprocesseddatadir, num2str(allfiles{f}.rawclusters(clu).maxChan),...
@@ -53,6 +56,8 @@ metrics.numspikes = spikeCount-1; %minus 1 bc last index added one automatically
 metrics.files = recinfo.files; 
 metrics.samprate = samprate; 
 %incorporate get stabletimes here
-%metrics.stabletimes = 
+[metrics.stable.times, metrics.stable.meanFR, metrics.stable.peakFR] = getstableclustertimes_gauss_K2(recinfo,...
+    allfiles, clu, props, figdir, 10, 5, 1);
+metrics.stable.info = 'times in [s], meanFR and peakFR from stable period over all recordings, in [Hz], idx in samprate';
 end
 
