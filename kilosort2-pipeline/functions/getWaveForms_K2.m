@@ -14,12 +14,13 @@ hpFilt = designfilt('highpassiir', 'StopbandFrequency', 100, ...
     'PassbandRipple', 1, 'SampleRate', samprate, 'DesignMethod', 'butter');
 
 for f = 1:length(recinfo.files)
-    disp(['Filtering raweeg for file ', num2str(f), ' of ', num2str(length(recinfo.files))])
+    disp(['Filtering raweeg for day ' num2str(recinfo.index(2)) ': file ', num2str(f), ' of ', num2str(length(recinfo.files))])
     
     % load cluster structure
     allfiles{f} = load([anclusterdir, 'rawclusters', num2str(recinfo.files(f)), '.mat'], 'rawclusters');
     WFchannels = [allfiles{f}.rawclusters.maxChan];
     WFchannels = unique(WFchannels);
+   
     
     %filter rawdata
     parfor ch = 1:length(WFchannels)
@@ -34,8 +35,10 @@ if ~isfile([anclusterdir, 'clustermetrics.mat']) || rewrite.wf
     parfor clu = 1:length(allfiles{1}.rawclusters) %should be same length all files
         clustermetrics(clu) = makeWFstructure(anprocesseddatadir, allfiles, clu, recinfo,...
             tAroundSpike, props, figdir);
-    end
+    end 
+    save([anclusterdir, 'clustermetrics.mat'], 'clustermetrics')
+
 end
-save([anclusterdir, 'clustermetrics.mat'], 'clustermetrics')
+
 end
 

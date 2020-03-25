@@ -17,7 +17,6 @@ params.animal = [22];
 params.day = [200202];
 params.files = {1:3};
 
-
 %% Set run options
 % writeToBin - first step, run to get .bin for Kilosort2
 % getSingleUnitTimes - run after manual curation in Phy2
@@ -34,7 +33,7 @@ qualityMetrics = 0;
 
 rewrite.eeg = 0;
 rewrite.wf = 1;
-rewrite.qualitymetrics = 0;
+rewrite.qualitymetrics = 1;
 
 
 %% write raw recording files to BIN for kilosort2
