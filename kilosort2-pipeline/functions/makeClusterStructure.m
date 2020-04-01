@@ -4,7 +4,7 @@ function makeClusterStructure(clusterdir, files, brainReg, clusfolder, numShanks
 
 for br = 1:length(brainReg) %could move this loop outside of the function for consistency?
     ankilosortdir = fullfile(clusterdir, brainReg{br}, clusfolder, 'kilosort\');
-    anclusterdir = fullfile(clusterdir, brainReg{br}, clusfolder); 
+    anclusterdir = fullfile(clusterdir, brainReg{br}, clusfolder, '\'); 
     
     %read clustered information
     spikeInds = readNPY([ankilosortdir, 'spike_times.npy']); %in indices

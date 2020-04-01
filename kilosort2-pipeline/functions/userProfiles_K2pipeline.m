@@ -24,9 +24,9 @@ if strcmp(user, 'Abby')
         params.numShanks = 2;
         
         dirs.rawdatadir = '\\neuro-cloud\labs\singer\RawData\Flicker_Chronic_VR\';
-        dirs.clusterdir = 'C:\Users\apaulson3\Desktop\Temp Kilosort\'; %this may be the same as processeddatadir
+        dirs.clusterdir = 'C:\Users\apaulson3\Desktop\TempKilosort\'; %this may be the same as processeddatadir
         dirs.processeddatadir = 'Y:\singer\ProcessedData\Flicker_7Day_VR\'; %may be the same as above  
-        dirs.clusfolder = 'sorted'; %subfolder that finished files will save into
+        dirs.clusfolder = 'sorted\'; %subfolder that finished files will save into
     end
 end
 

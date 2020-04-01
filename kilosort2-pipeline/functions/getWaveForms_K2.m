@@ -30,13 +30,13 @@ for f = 1:length(recinfo.files)
 end
 
 % get waveforms from filtered eeg
-if ~isfile([anclusterdir, 'clustermetrics.mat']) || rewrite.wf
+if ~isfile([anclusterdir, 'rawclustermetrics.mat']) || rewrite.wf
     disp('Getting cluster metrics')
     parfor clu = 1:length(allfiles{1}.rawclusters) %should be same length all files
-        clustermetrics(clu) = makeWFstructure(anprocesseddatadir, allfiles, clu, recinfo,...
+        rawclustermetrics(clu) = makeWFstructure(anprocesseddatadir, allfiles, clu, recinfo,...
             tAroundSpike, props, figdir);
     end 
-    save([anclusterdir, 'clustermetrics.mat'], 'clustermetrics')
+    save([anclusterdir, 'rawclustermetrics.mat'], 'rawclustermetrics')
 
 end
 

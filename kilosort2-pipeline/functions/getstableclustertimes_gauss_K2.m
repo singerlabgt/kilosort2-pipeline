@@ -173,7 +173,7 @@ end
 %% save figure
 title(['Stable Times - ', recinfo.iden, num2str(recinfo.index(1)), ' ', num2str(recinfo.index(2)), ' - Cluster ', num2str(allfiles{1}.rawclusters(unit).ID)])
 datadir = fullfile(figdir, 'stability\');
-if ~exist(datadir)
+if ~exist(datadir, 'dir')
     mkdir(datadir);
 end
 figname = ['cluster', num2str(allfiles{1}.rawclusters(unit).ID), '_stabletimes_'];
