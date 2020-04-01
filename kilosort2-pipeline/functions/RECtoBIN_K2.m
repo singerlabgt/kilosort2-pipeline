@@ -79,11 +79,12 @@ for f = 1:length(fileNums) %loop around desired files
     else
         disp('Invalid file identifier (fid < 0).')
     end
+    props.fileNames(f) = fileNames(ind);
 end
 
 props.recLength = recLength;
 props.sampRate = sampRate;
-props.fileNames = fileNames;
+
 props.hw_chan = hwChan;
 
 %save properties for fixing spike times after sorting
