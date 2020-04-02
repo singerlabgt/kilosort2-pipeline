@@ -53,7 +53,7 @@ metrics.isi_h = histc(metrics.isi.all_ms, 0:0.1:10);
 metrics.isi.edges_ms = 0:0.1:10; 
 metrics.numspikes = spikeCount-1; %minus 1 bc last index added one automatically
 metrics.files = recinfo.files; 
-metrics.maxChan = allfiles{1}.rawclusters(clu).maxChan; 
+metrics.maxChannel = allfiles{1}.rawclusters(clu).maxChan; 
 metrics.samprate = samprate; 
 [metrics.stable.times, metrics.stable.meanFR, metrics.stable.peakFR] = getstableclustertimes_gauss_K2(recinfo,...
     allfiles, clu, props, figdir, 10, 5, 1);

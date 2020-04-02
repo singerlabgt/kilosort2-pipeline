@@ -18,7 +18,7 @@ for f = 1:length(recinfo.files)
     
     % load cluster structure
     allfiles{f} = load([anclusterdir, 'rawclusters', num2str(recinfo.files(f)), '.mat'], 'rawclusters');
-    WFchannels = [allfiles{f}.rawclusters.maxChan];
+    WFchannels = [allfiles{f}.rawclusters.maxChannel];
     WFchannels = unique(WFchannels);
    
     

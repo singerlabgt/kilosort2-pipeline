@@ -20,7 +20,7 @@ if strcmp(user, 'Abby')
         params.probeChannels = {1:64, 65:128}; %should be the indices of the channels in the data structure totalCh x samples
         params.portLetter = {'A', 'B', 'C', 'D'};
         params.brainReg = {'CA3', 'CA1'};
-        params.animalID = {'A'};
+        params.animalID = 'A';
         params.numShanks = 2;
         
         dirs.rawdatadir = '\\neuro-cloud\labs\singer\RawData\Flicker_Chronic_VR\';
