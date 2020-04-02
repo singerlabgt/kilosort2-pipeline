@@ -13,96 +13,72 @@ clear; close all;
 % spike gadgets ALP 7/14/19
 
 [params, dirs] = userProfiles_K2pipeline('Abby', 'ChronicFlicker');
-params.animal = [22, 21, 21, 21];
-params.day = [200211, 200204, 200205, 200213];
-params.files = {1:3, 1:5, 1:5, 1:5};
+params.animal = [21, 21, 21];
+params.day = [200204, 200205, 200213];
+params.files = {1:5, 1:5, 1:5};
 
 %% Set run options
-% writeToBin - first step, run to get .bin for Kilosort2
-% getSingleUnitTimes - run after manual curation in Phy2
+%First, run the preCuration step. 
+%After manually curation the Kilosort2 output, run the postCuration step. 
 
-writeToBIN = 1; 
-getSingleUnitTimes = 0; 
-getWFstruct = 0;
-qualityMetrics = 0; 
+run.preCuration = 0; %write specificed files to .bin for Kilosort
+run.postCuration = 1; %get single unit times, get waveforms, and apply quality metrics
 
-%% set rewriting options
+%% Set rewriting options
 % set these options to force the code to rewrite the files specified below.
 % Otherwise, the pipeline will load up previously stored files if they
 % exist.
 
-rewrite.eeg = 0;
+rewrite.eeg = 1;
 rewrite.wf = 1;
 rewrite.qualitymetrics = 1;
 
+%% Quality control thresholds
+% !!!!!! Do not change without notifying all users !!!!!!
+
+th.SNR =  1;                    % >= 1 SNR
+th.ISI = 0.008;                 % <= 0.8% refractory period violations
+th.refractoryPeriod = 0.001;    % 1ms refractory period duration
+th.info = '>= th.SNR, <= th.ISI (frac violations/allISI), th.refractoryPeriod in s';
+% th.noiseOverlap
+% th.isolation
 
 %% write raw recording files to BIN for kilosort2
 
-if writeToBIN
+if run.preCuration
     for d = 1:length(params.day)
-        anrawdatadir = [dirs.rawdatadir, params.animalID{d}, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
-        tempfiledir = [dirs.processeddatadir, params.animalID{d}, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
-        anclusterdir = [dirs.clusterdir, params.animalID{d}, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
+        anrawdatadir = [dirs.rawdatadir, params.animalID, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
+        tempfiledir = [dirs.processeddatadir, params.animalID, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
+        anclusterdir = [dirs.clusterdir, params.animalID, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
         
         if ~exist(anclusterdir, 'dir'); mkdir(anclusterdir); end
         converttoBIN_K2(anrawdatadir, anclusterdir, params.files{d}, params.probeChannels, params.brainReg, dirs.clusfolder)
     end
 end
 
-%% get single unit information and times
+%% get single unit times, waveforms, cluster properties, and apply quality metrics
 
-if getSingleUnitTimes
-    for d = 1:length(params.day)
-        anrawdatadir = [dirs.rawdatadir, params.animalID{d}, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
-        anclusterdir = [dirs.clusterdir, params.animalID{d}, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
-        
-        makeClusterStructure(anclusterdir, params.files{d}, params.brainReg, dirs.clusfolder, params.numShanks)
-
-    end
-end
-
-
-%% get waveforms and cluster properties
-
-if getWFstruct
+if run.postCuration
     for d = 1:length(params.day)
         for br = 1:length(params.brainReg)
-            anprocesseddatadir = [dirs.processeddatadir, params.animalID{d}, num2str(params.animal(d)), '_', num2str(params.day(d)), '\', params.brainReg{br}, '\'];
-            anclusterdir = fullfile(dirs.clusterdir, [params.animalID{d}, num2str(params.animal(d)), '_', num2str(params.day(d))], params.brainReg{br}, dirs.clusfolder, '\');
+            recinfo.iden = params.animalID; 
+            recinfo.index = [params.animal(d) params.day(d)]; 
+            recinfo.files = params.files{d}; 
+            recinfo.brainReg = params.brainReg{br}; 
+            
+            anprocesseddatadir = [dirs.processeddatadir, params.animalID, num2str(params.animal(d)), '_', num2str(params.day(d)), '\', params.brainReg{br}, '\'];
+            anclusterdir = fullfile(dirs.clusterdir, [params.animalID, num2str(params.animal(d)), '_', num2str(params.day(d))], params.brainReg{br}, dirs.clusfolder, '\');
             figdir = fullfile(anclusterdir, 'figs');
             
-            recinfo.iden = params.animalID{d}; 
-            recinfo.index = [params.animal(d) params.day(d)]; 
-            recinfo.files = params.files{d}; 
-            recinfo.brainReg = params.brainReg{br}; 
-
+            %get information about the curated units from the kilsort and
+            %phy files
+            makeClusterStructure(anclusterdir, recinfo, params.brainReg{br}, dirs.clusfolder, params.numShanks)
             
+            %get waveforms and other metrics about each cluster
             getWaveForms_K2(anprocesseddatadir, anclusterdir, recinfo, figdir, rewrite)
-        end
-    end
-end
-
-%% apply quality metrics and make final clusters structure
-% Things I know I can do: SNR, ISI
-% Things I want to do: isolation against other units
-
-th.SNR =  1;                    % >= 1 SNR
-th.ISI = 0.008;                % <= 0.8% refractory period violations
-th.refractoryPeriod = 0.001;    % 1ms refractory period duration
-th.info = '>= th.SNR, <= th.ISI (frac violations/allISI), th.refractoryPeriod in s';
-% th.noiseOverlap
-% th.isolation
-
-if qualityMetrics
-    for d = 1:length(params.day)
-        for br = 1:length(params.brainReg)
-            anclusterdir = fullfile(dirs.clusterdir, [params.animalID{d}, num2str(params.animal(d)), '_', num2str(params.day(d))], params.brainReg{br}, dirs.clusfolder);
             
-            recinfo.iden = params.animalID{d}; 
-            recinfo.index = [params.animal(d) params.day(d)]; 
-            recinfo.files = params.files{d}; 
-            recinfo.brainReg = params.brainReg{br}; 
-            
+            %apply quality metrics to all clusters and create outputs
+            %structures
             applyQualityMetrics(anclusterdir, recinfo, rewrite.qualitymetrics, th)
         end
     end
