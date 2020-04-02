@@ -13,18 +13,18 @@ clear; close all;
 % spike gadgets ALP 7/14/19
 
 [params, dirs] = userProfiles_K2pipeline('Abby', 'ChronicFlicker');
-params.animal = [22];
-params.day = [200201];
-params.files = {1:4};
+params.animal = [22, 21, 21, 21];
+params.day = [200211, 200204, 200205, 200213];
+params.files = {1:3, 1:5, 1:5, 1:5};
 
 %% Set run options
 % writeToBin - first step, run to get .bin for Kilosort2
 % getSingleUnitTimes - run after manual curation in Phy2
 
-writeToBIN = 0; 
+writeToBIN = 1; 
 getSingleUnitTimes = 0; 
 getWFstruct = 0;
-qualityMetrics = 1; 
+qualityMetrics = 0; 
 
 %% set rewriting options
 % set these options to force the code to rewrite the files specified below.
