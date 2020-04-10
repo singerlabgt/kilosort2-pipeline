@@ -36,19 +36,20 @@ spikewidth.troughIdxDiff = troughIdx;
 spikewidth.fullWFDiff = waveform;
 
 %% make sure peak2trough values are correct
+clf
 hold on; 
 plot(waveform);
 plot(peakIdx, waveform(peakIdx),'rs');
 plot(troughIdx, waveform(troughIdx),'ks');
 title(['Waveform ', recinfo.iden, ' ', num2str(recinfo.index(1)), ' ', num2str(recinfo.index(2)),...
-    ' Cluster - ', num2str(clusID), ' - MatIndex: ', num2str(clusIdx)]);
+    ' ClusterID - ', num2str(clusID), ' - MatIndex: ', num2str(clusIdx)]);
 
 %% save figures 
 figname = ['Cluster' num2str(clusIdx) '_peak2troughDiff'];
 
-% if ~exist([datadir filename iden num2str(dayindex(1)) '_' num2str(dayindex(2)) '.fig'])
-%     pause
-% end
+if ~exist([figdir figname recinfo.iden num2str(recinfo.index(1)) '_' num2str(recinfo.index(2)) '.fig'])
+    pause
+end
 savefigSP(recinfo.index, figdir, figname, recinfo.iden);
 clf
 end

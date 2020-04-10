@@ -52,7 +52,7 @@ for f = 1:length(recinfo.files)
         for clu = 1:length(good_final)
             if good_final(clu)
                 clusters{recinfo.index(1)}{recinfo.index(2)}{recinfo.files(f)}.data(numgood).ID = rawclusters(clu).ID;
-                clusters{recinfo.index(1)}{recinfo.index(2)}{recinfo.files(f)}.data(numgood).maxChannel = rawclusters(clu).maxChannel;
+                clusters{recinfo.index(1)}{recinfo.index(2)}{recinfo.files(f)}.data(numgood).maxChan = rawclusters(clu).maxChan;
                 clusters{recinfo.index(1)}{recinfo.index(2)}{recinfo.files(f)}.data(numgood).spikeInds = rawclusters(clu).spikeInds;
                 numgood = numgood+1; 
             end

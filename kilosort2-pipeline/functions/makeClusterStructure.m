@@ -6,8 +6,8 @@ function makeClusterStructure(clusterdir, recinfo, brainReg, clusfolder, numShan
 files = recinfo.files; 
 
 
-ankilosortdir = fullfile(clusterdir, brainReg, clusfolder, 'kilosort\');
-anclusterdir = fullfile(clusterdir, brainReg, clusfolder, '\');
+ankilosortdir = fullfile(clusterdir, 'kilosort\');
+anclusterdir = fullfile(clusterdir, '\');
 
 %read clustered information
 spikeInds = readNPY([ankilosortdir, 'spike_times.npy']); %in indices
@@ -49,12 +49,12 @@ for f = 1:length(files)
     rawclusters = struct('ID', num2cell(goodUnits), ...
         'spikeInds', repmat({[]}, 1, length(goodUnits)),...
         'sampRate', num2cell(props.sampRate*ones(1, length(goodUnits))), ...
-        'maxChannel', num2cell(unitMaxChan'), 'info', repmat({'pre quality control metrics'}, 1, length(goodUnits)),...
+        'maxChan', num2cell(unitMaxChan'), 'info', repmat({'pre quality control metrics'}, 1, length(goodUnits)),...
         'numShanks',num2cell(numShanks*ones(1, length(goodUnits))), 'brainReg', repmat({brainReg}, 1, length(goodUnits)), ...
-        'numChannels', num2cell(props.numChan*ones(1,length(goodUnits))));
+        'numChan', num2cell(props.numChan*ones(1,length(goodUnits))));
     
-    [rawclusters(1:goodUnits).index] = deal(recinfo.index); 
-    [rawclusters(1:goodUnits).files] = deal(recinfo.files); 
+    [rawclusters(1:length(goodUnits)).index] = deal(recinfo.index); 
+    [rawclusters(1:length(goodUnits)).files] = deal(recinfo.files); 
     
     for clu = 1:length(goodUnits)
         if f == 1
@@ -79,11 +79,11 @@ end
 rawclusters_allrec = struct('ID', num2cell(goodUnits), ...
     'spikeInds', repmat({[]}, 1, length(goodUnits)),...
     'sampRate', num2cell(props.sampRate*ones(1, length(goodUnits))), ...
-    'maxChannel', num2cell(unitMaxChan'), 'info', repmat({'all files. pre quality control metrics'}, 1, length(goodUnits)), ...
+    'maxChan', num2cell(unitMaxChan'), 'info', repmat({'all files. pre quality control metrics'}, 1, length(goodUnits)), ...
     'numShanks',num2cell(numShanks*ones(1, length(goodUnits))), 'brainReg', repmat({brainReg}, 1, length(goodUnits)), ...
-    'numChannels', num2cell(props.numChan*ones(1,length(goodUnits))));
-[rawclusters_allrec(1:goodUnits).index] = deal(recinfo.index); 
-[rawclusters_allrec(1:goodUnits).files] = deal(recinfo.files); 
+    'numChan', num2cell(props.numChan*ones(1,length(goodUnits))));
+[rawclusters_allrec(1:length(goodUnits)).index] = deal(recinfo.index); 
+[rawclusters_allrec(1:length(goodUnits)).files] = deal(recinfo.files); 
 
 for clu = 1:length(goodUnits)
     tempSpikeInds{clu} = spikeInds(spikeID == goodUnits(clu));

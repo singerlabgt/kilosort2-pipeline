@@ -3,14 +3,17 @@ function [params, dirs] = userProfiles_K2pipeline(user, project)
 %
 %ALP 2/19/20
 
-%% Defaults
+%% Parameters
 % animal and day: 1xN vect of same length 
 % files: cell array with each element containing 1xN vect of desired files
 % probeChannels: cell array with each element containing 1xN vect of 
 %   channels of desired region. channels should be 1 based. 
 % brainReg: cell array of brain regions with same length as probeChannels. 
 %    can be {''} if desired
-% animalID: cell array of ID letters with same length as brainReg
+% animalID: ID letter
+
+%% Directories
+
 
 %% User Profiles
 
@@ -18,7 +21,6 @@ function [params, dirs] = userProfiles_K2pipeline(user, project)
 if strcmp(user, 'Abby')
     if strcmp(project, 'ChronicFlicker')
         params.probeChannels = {1:64, 65:128}; %should be the indices of the channels in the data structure totalCh x samples
-        params.portLetter = {'A', 'B', 'C', 'D'};
         params.brainReg = {'CA3', 'CA1'};
         params.animalID = 'A';
         params.numShanks = 2;
@@ -30,7 +32,21 @@ if strcmp(user, 'Abby')
     end
 end
 
-%%%%%%%%%%%%%%%%% ----- Nuri ----- %%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% ----- New User ----- %%%%%%%%%%%%%%%
+
+if strcmp(user, 'NewUser')
+  if strcmp(project, 'NewProject')
+        params.probeChannels = {1:32}; %should be the indices of the channels in the data structure totalCh x samples
+        params.brainReg = {'CA1'}; %your brain region here 
+        params.animalID = 'A'; %sub your animal prefix here
+        params.numShanks = 1; % how many shanks does your probe have? 
+        
+        dirs.rawdatadir = ''; %the location of your raw data files
+        dirs.clusterdir = ''; %where you want your cluster files to end up
+        dirs.processeddatadir = ''; %where the processed data for your experiment is
+        dirs.clusfolder = 'sorted\'; %subfolder that finished files will save into 
+  end
+end
 
 end
 

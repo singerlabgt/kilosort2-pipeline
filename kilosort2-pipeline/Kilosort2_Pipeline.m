@@ -13,9 +13,12 @@ clear; close all;
 % spike gadgets ALP 7/14/19
 
 [params, dirs] = userProfiles_K2pipeline('Abby', 'ChronicFlicker');
-params.animal = [21, 21, 21];
-params.day = [200204, 200205, 200213];
-params.files = {1:5, 1:5, 1:5};
+% params.animal = [26, 26, 25];
+% params.day = [200313, 200314, 200317];
+% params.files = {1:4, 1:4, 1:4};
+params.animal = [25];
+params.day = [200317];
+params.files = {1:4};
 
 %% Set run options
 %First, run the preCuration step. 
