@@ -28,13 +28,19 @@ load([ankilosortdir, 'sortingprops.mat'], 'props')
 %only units classified as "good"
 goodUnits = clusterID(clusterGroup == 2);
 
-%get templates for each cluster
+%get templates for each cluster - noise, mua, and good
 tempPerUnit = findTempForEachClu(spikeID, spikeTemplates);
+
+%check length of tempPerUnit and spikeID are equal
+if ~isequal(length(tempPerUnit), length(spikeID))
+    error('Length of templates and identified clusters do not match')
+end
 
 %get max channel per cluster based on max template amplitude
 [~,max_site] = max(max(abs(templates),[],2),[],3);
-templateMaxChan = channelMap(max_site); %0 based, template 0 is at ind 1
-unitMaxChan = templateMaxChan(tempPerUnit(~isnan(tempPerUnit))+1);
+templateMaxChan = channelMap(max_site); %0 based, template 0 is at ind 1 - max channel of each template
+unitMaxChan = templateMaxChan(tempPerUnit(~isnan(tempPerUnit))+1); %only valid templates, +1 because template is 0 based 
+unitMaxChan = templateMaxChan(tempPerUnit+1); % +1 because template is 0 based 
 unitMaxChan = double(unitMaxChan(clusterGroup == 2)); %only good units
 
 %for SpikeGadgets, use hardware channel numbers for maxChan - NJ 03.10.2020
