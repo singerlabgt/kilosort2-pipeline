@@ -23,6 +23,9 @@ elseif (useRefs > 1) || (useRefs < 0)
     error('useRefs argument must be either 0 or 1');
 end
 
+%get rid of the annoying underscore in folder name - NJ 08.16.2020
+fileString = regexp(fileNameMask, '_');
+fileNameMask = fileNameMask(1:fileString-1);
 recFiles = dir([fileNameMask,'*.rec']);
 
 recFileString = [];
