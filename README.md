@@ -7,7 +7,7 @@
 [Clustering and manual curation](#clustering-and-manual-curation) - information on installing clustering software and curating the output  
 
 ## How it works
-The Kilosort2 Pipeline has four main sections. As a user, you will only edit Sections 1-2, which consist of input parameters and run options. Do not edit Section 3 without consulting all other users. 
+The Kilosort2 Pipeline has three main sections. As a user, you will only edit Sections 1-2, which consist of input parameters and run options. Do not edit Section 3 without consulting all other users. Feel free to edit on your own branch or fork, but don't push changes to the master without consulting everyone.  
 
 ### Section 1 - setting parameters
 In this section, user profiles and recording parameters are defined. Edit permanent parameters for your probes and experiments in your [User Profile](#creating-a-user-profile). Set information about the recording sessions you wish to cluster. 
@@ -45,6 +45,7 @@ rewrite.qualitymetrics = 1;
 ```
 
 ### Section 3 - write clustering files
+This section of the documentation is in progress...
 
 ## Using the script
 ### Creating a user profile
@@ -80,6 +81,7 @@ end
 The only required data input is raw data files. Currently, only Intan (.rhd) and Spike Gadgets (.rec) data formats are supported. 
 
 ### Outputs
+The section of the documentation is in progress...
 
 ## Clustering and manual curation 
 This script relies upon the Kilosort2 algorithm and Phy2 gui to cluster and manually curate. See the links below for information on installing those packages. 
@@ -91,5 +93,5 @@ Visit https://github.com/MouseLand/Kilosort2 for installation instructions. Furt
 Visit https://github.com/cortex-lab/phy for information about installing Phy2. 
 
 ### Singer Lab guidelines for clustering
-
+This section of the documentation is in progress...
 
