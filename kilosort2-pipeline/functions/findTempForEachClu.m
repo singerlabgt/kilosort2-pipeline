@@ -13,7 +13,9 @@ function tempPerClu = findTempForEachClu(clu, spikeTemplates)
 % zero-indexed (as they were in spikeTemplates), but the entries of 
 % tempPerClu cannot be (so they are shifted by one), which is why cluster 
 % 1000 is found at index 1001. 
-
+%
+%ALP note: this is from the "Spikes" repo from the cortex lab
+%https://github.com/cortex-lab/spikes/blob/master/analysis/findTempForEachClu.m
 tempCountsByClu = full(sparse(double(clu)+1, double(spikeTemplates)+1, ones(size(clu))));
 
 [~, tempPerClu] = max(tempCountsByClu,[],2);

@@ -88,6 +88,7 @@ end
 props.recLength = recLength;
 props.sampRate = 20000;
 props.fileNums = filenum;
+props.numChan = length(probechannels); 
 
 %save properties for fixing spike times after sorting
 save([targetpath, 'sortingprops.mat'], 'props')

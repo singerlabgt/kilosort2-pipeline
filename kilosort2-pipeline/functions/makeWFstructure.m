@@ -47,15 +47,14 @@ metrics.WF.mn = mean(tempWFs, 1, 'omitnan');
 metrics.WF.std = std(tempWFs, 0, 1, 'omitnan');
 metrics.snr = (max(metrics.WF.mn) - min(metrics.WF.mn))/mean(metrics.WF.std);
 metrics.WF.info = '1ms before and 2ms after minimum amplitude';
-% metrics.peak2trough_ms = calcSpikewidth_K2(metrics.WF.mn, recinfo, allfiles{f}.rawclusters(clu).ID, samprate, figdir);
 metrics.firingrate = spikeCount/recLengthAll; %in Hz
 metrics.isi.all_ms = isi./(samprate/1000); %in ms
 metrics.isi_h = histc(metrics.isi.all_ms, 0:0.1:10);
 metrics.isi.edges_ms = 0:0.1:10; 
 metrics.numspikes = spikeCount-1; %minus 1 bc last index added one automatically
 metrics.files = recinfo.files; 
+metrics.maxChan = allfiles{1}.rawclusters(clu).maxChan; 
 metrics.samprate = samprate; 
-%incorporate get stabletimes here
 [metrics.stable.times, metrics.stable.meanFR, metrics.stable.peakFR] = getstableclustertimes_gauss_K2(recinfo,...
     allfiles, clu, props, figdir, 10, 5, 1);
 metrics.stable.info = 'times in [s], meanFR and peakFR from stable period over all recordings, in [Hz], idx in samprate';
