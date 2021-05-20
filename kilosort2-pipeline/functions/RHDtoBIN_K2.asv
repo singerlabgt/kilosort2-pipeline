@@ -62,18 +62,10 @@ for j = 1:numRecs
             fprintf('Loading RHD data from file %d of %d...\n',i,numfiles)
             data = [];
             % Get data from modified Intan code
-            %ALP 5/5/21 incorporate gap detection and interpolation
-            [intandata, ~] = read_Intan_RHD2000_fileALP_interpgaps([datafolder{j}, ...
-                files(indrightfile(i)).name]);
-            data = intandata.amplifier_data(probechannels,:); 
-            clear intandata
-            %end ALP 5/5/21
+            [intandata, ~] = 
+            data = get_Intan_RHD2000_file_K2(datafolder{j}, ...
+                files(indrightfile(i)).name,1,0, probechannels);
             
-            %below old extraction
-%             data = get_Intan_RHD2000_file_K2(datafolder{j}, ...
-%                 files(indrightfile(i)).name,1,0, probechannels);
-            %end old extraction
-
             % Return the channel and frequency parameters from the first file
             % Data should be numChannels x N, where N is number of samples, each row a
             % channel
@@ -83,12 +75,12 @@ for j = 1:numRecs
                 f1 = fopen(targetfile,'a');
             end
             
-            probedata = data;
+            probedata = data{1};
             fwrite(f1,probedata,dtype);
             fclose(f1);
             
-            recLength(j) = recLength(j)+size(data,2);
-            clear probedata data
+            recLength(j) = recLength(j)+size(data{1},2);
+            clear probedata
         end
     end
 end

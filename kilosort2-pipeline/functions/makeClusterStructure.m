@@ -32,7 +32,7 @@ goodUnits = clusterID(clusterGroup == 2);
 tempPerUnit = findTempForEachClu(spikeID, spikeTemplates);
 
 %check length of tempPerUnit and spikeID are equal
-if ~isequal(length(tempPerUnit), length(spikeID))
+if ~isequal(length(tempPerUnit)-1, clusterID(end))
     error('Length of templates and identified clusters do not match')
 end
 
@@ -40,7 +40,7 @@ end
 [~,max_site] = max(max(abs(templates),[],2),[],3);
 templateMaxChan = channelMap(max_site); %0 based, template 0 is at ind 1 - max channel of each template
 unitMaxChan = templateMaxChan(tempPerUnit(~isnan(tempPerUnit))+1); %only valid templates, +1 because template is 0 based 
-unitMaxChan = templateMaxChan(tempPerUnit+1); % +1 because template is 0 based 
+%unitMaxChan = templateMaxChan(tempPerUnit+1); % +1 because template is 0 based 
 unitMaxChan = double(unitMaxChan(clusterGroup == 2)); %only good units
 
 %for SpikeGadgets, use hardware channel numbers for maxChan - NJ 03.10.2020

@@ -20,15 +20,18 @@ function [params, dirs] = userProfiles_K2pipeline(user, project)
 %%%%%%%%%%%%%%%%% ----- Abby ----- %%%%%%%%%%%%%%
 if strcmp(user, 'Abby')
     if strcmp(project, 'ChronicFlicker')
-        params.probeChannels = {1:64, 65:128}; %should be the indices of the channels in the data structure totalCh x samples
-        params.brainReg = {'CA3', 'CA1'};
+        params.probeChannels = {65:128}; %should be the 1 based indices of the channels in the data structure totalCh x samples
+        params.brainReg = {'CA1'};
         params.animalID = 'A';
         params.numShanks = 2;
         
         dirs.rawdatadir = '\\neuro-cloud\labs\singer\RawData\Flicker_Chronic_VR\';
         dirs.clusterdir = 'C:\Users\apaulson3\Desktop\TempKilosort\'; %this may be the same as processeddatadir
-        dirs.processeddatadir = 'Y:\singer\ProcessedData\Flicker_7Day_VR\'; %may be the same as above  
+        %dirs.clusterdir = '\\neuro-cloud\labs\singer\ProcessedData\Flicker_7Day_VR\';
+        dirs.processeddatadir = '\\neuro-cloud\labs\singer\ProcessedData\Flicker_7Day_VR\'; %may be the same as above  
         dirs.clusfolder = 'sorted\'; %subfolder that finished files will save into
+        dirs.spreadsheetdir = '\\neuro-cloud.ad.gatech.edu\labs\singer\Abby\experimentspreadsheets\chronicflicker_annulartrack_ephys.xls';
+
     end
 end
 

@@ -13,19 +13,21 @@ clear; close all;
 % spike gadgets ALP 7/14/19
 
 [params, dirs] = userProfiles_K2pipeline('Abby', 'ChronicFlicker');
-% params.animal = [26, 26, 25];
-% params.day = [200313, 200314, 200317];
-% params.files = {1:4, 1:4, 1:4};
-params.animal = [25];
-params.day = [200317];
-params.files = {1:4};
+[allindex, ~] = getallindexALP(dirs.processeddatadir, dirs.spreadsheetdir, 0);
+
+allindex = allindex(allindex(:,1) == 45 | allindex(:,1) == 46,:); 
+dayindex = unique(allindex(:,1:2), 'rows');
+
+params.animal = dayindex(:,1);
+params.day = dayindex(:,2);
+params.files = arrayfun(@(x) {allindex(allindex(:,2) == dayindex(x,2),3)}, 1:size(dayindex,1));
 
 %% Set run options
 %First, run the preCuration step. 
 %After manually curation the Kilosort2 output, run the postCuration step. 
 
-run.preCuration = 0; %write specificed files to .bin for Kilosort
-run.postCuration = 1; %get single unit times, get waveforms, and apply quality metrics
+run.preCuration = 1; %write specificed files to .bin for Kilosort
+run.postCuration = 0; %get single unit times, get waveforms, and apply quality metrics
 
 %% Set rewriting options
 % set these options to force the code to rewrite the files specified below.
