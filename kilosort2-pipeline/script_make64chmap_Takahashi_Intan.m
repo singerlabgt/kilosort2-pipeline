@@ -48,7 +48,7 @@ y = [ ...
 %% plot to check
 % looks good ALP 9/11/2020
 
-plot(x,y, '*')
+plot(x,y, '.')
 ylim([-10 180])
 xlim([-50 300])
 
@@ -86,3 +86,9 @@ chmap = chmap+1; %1 based
 %evaluated the above and copied the result:
 chmapfinal = [25,29,30,1,2,3,27,6,31,8,4,24,5,22,21,7,18,20,23,13,15,9,17,11,19,16,32,26,28,14,12,10,33,39,37,51,53,55,52,50,56,48,54,46,49,44,43,47,58,42,45,38,59,34,57,61,41,60,40,36,35,64,63,62];
     
+
+%plot to check again
+
+for c = 1:length(chmapfinal)
+    text(x(c),y(c),num2str(chmapfinal(c)-1)) 
+end
