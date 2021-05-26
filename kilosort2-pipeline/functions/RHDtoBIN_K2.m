@@ -28,7 +28,6 @@ recLength = zeros(1,numRecs);
 for j = 1:numRecs
     if exist([datafolder{j}, 'recording', num2str(filenum(j)), '_combined.rhd'], 'file') %if a combined recording file exists
                 targetfile = [targetpath 'allrecordings.bin'];
-
         data = get_Intan_RHD2000_file_K2(datafolder{j}, ['recording', num2str(filenum(j)), '_combined.rhd'], ...
             1, 0, probechannels);
         % Return the channel and frequency parameters from the first file
@@ -63,9 +62,18 @@ for j = 1:numRecs
             fprintf('Loading RHD data from file %d of %d...\n',i,numfiles)
             data = [];
             % Get data from modified Intan code
-            data = get_Intan_RHD2000_file_K2(datafolder{j}, ...
-                files(indrightfile(i)).name,1,0, probechannels);
+            %ALP 5/5/21 incorporate gap detection and interpolation
+            [intandata, ~] = read_Intan_RHD2000_fileALP_interpgaps([datafolder{j}, ...
+                files(indrightfile(i)).name]);
+            data = intandata.amplifier_data(probechannels,:); 
+            clear intandata
+            %end ALP 5/5/21
             
+            %below old extraction
+%             data = get_Intan_RHD2000_file_K2(datafolder{j}, ...
+%                 files(indrightfile(i)).name,1,0, probechannels);
+            %end old extraction
+
             % Return the channel and frequency parameters from the first file
             % Data should be numChannels x N, where N is number of samples, each row a
             % channel
@@ -75,12 +83,12 @@ for j = 1:numRecs
                 f1 = fopen(targetfile,'a');
             end
             
-            probedata = data{1};
+            probedata = data;
             fwrite(f1,probedata,dtype);
             fclose(f1);
             
-            recLength(j) = recLength(j)+size(data{1},2);
-            clear probedata
+            recLength(j) = recLength(j)+size(data,2);
+            clear probedata data
         end
     end
 end
@@ -89,6 +97,7 @@ props.recLength = recLength;
 props.sampRate = 20000;
 props.fileNums = filenum;
 props.numChan = length(probechannels); 
+props.date = datestr(now); 
 
 %save properties for fixing spike times after sorting
 save([targetpath, 'sortingprops.mat'], 'props')

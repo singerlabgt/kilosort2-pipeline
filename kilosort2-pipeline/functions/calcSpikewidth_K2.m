@@ -48,7 +48,7 @@ title(['Waveform ', recinfo.iden, ' ', num2str(recinfo.index(1)), ' ', num2str(r
 figname = ['Cluster' num2str(clusIdx) '_peak2troughDiff'];
 
 if ~exist([figdir figname recinfo.iden num2str(recinfo.index(1)) '_' num2str(recinfo.index(2)) '.fig'])
-    pause
+   % pause
 end
 savefigSP(recinfo.index, figdir, figname, recinfo.iden);
 clf
