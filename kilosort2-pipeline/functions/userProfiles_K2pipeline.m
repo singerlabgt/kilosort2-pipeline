@@ -26,11 +26,27 @@ if strcmp(user, 'Abby')
         params.numShanks = 2;
         
         dirs.rawdatadir = '\\neuro-cloud\labs\singer\RawData\Flicker_Chronic_VR\';
-        dirs.clusterdir = 'C:\Users\apaulson3\Desktop\TempKilosort\'; %this may be the same as processeddatadir
-        %dirs.clusterdir = '\\neuro-cloud\labs\singer\ProcessedData\Flicker_7Day_VR\';
+        dirs.localclusterdir = 'C:\Users\apaulson3\Desktop\TempKilosort\'; %this may be the same as processeddatadir
+        dirs.remoteclusterdir = '\\neuro-cloud\labs\singer\ProcessedData\Flicker_7Day_VR\';
         dirs.processeddatadir = '\\neuro-cloud\labs\singer\ProcessedData\Flicker_7Day_VR\'; %may be the same as above  
         dirs.clusfolder = 'sorted\'; %subfolder that finished files will save into
         dirs.spreadsheetdir = '\\neuro-cloud.ad.gatech.edu\labs\singer\Abby\experimentspreadsheets\chronicflicker_annulartrack_ephys.xls';
+
+    end
+end
+
+%%%%%%%%%%%%%%%%% ----- Abby ----- %%%%%%%%%%%%%%
+if strcmp(user, 'Steph')
+    if strcmp(project, 'UpdateTask')
+        params.animalID = 'S';
+        params.numShanks = 2;
+        
+        dirs.rawdatadir = '\\neuro-cloud\labs\singer\RawData\UpdateTask\';
+        dirs.localclusterdir = 'C:\Users\sprince7\Desktop\TempKilosort\'; %this may be the same as processeddatadir
+        dirs.remoteclusterdir = '\\neuro-cloud\labs\singer\ProcessedData\UpdateTask\';
+        dirs.processeddatadir = '\\neuro-cloud\labs\singer\ProcessedData\UpdateTask\'; %may be the same as above  
+        dirs.clusfolder = 'sorted\'; %subfolder that finished files will save into
+        dirs.spreadsheetdir = '\\neuro-cloud.ad.gatech.edu\labs\singer\Steph\Code\update-project\doc\VRUpdateTaskEphysSummary.xlsx';
 
     end
 end
