@@ -13,9 +13,9 @@ function RECtoBIN_K2(rawdatadir, targetdir, dtype, fileNames, fileNums, channels
 
 cd (rawdatadir)
 %% Extract .rec into .dat files, if not done already
-if ~isfolder(fullfile(rawdatadir, 'recording1.LFP'))
+if ~isfolder(fullfile(rawdatadir, 'recording1.raw'))
     parfor f = 1:length(fileNums)
-        extractUnfilteredLFPBinaryFiles(['recording' num2str(fileNums(f)) '_']) %added underscore(_) bc the number 1 shows up in both rec1 and rec10, rec11, etc. NJ 08.16.2020
+        extractUnfilteredLFPBinaryFiles(['recording' num2str(fileNums(f))])
     end
 end
 
@@ -30,7 +30,7 @@ end
 recLength = zeros(length(fileNums),1);
 
 for f = 1:length(fileNums) %loop around desired files
-    ind = strfind({fileNames.name}, strcat('recording', num2str(fileNums(f)),'_')); %added underscore(_) bc the number 1 appears in recordings 1, 10, 11, etc.
+    ind = strfind({fileNames.name}, strcat('recording', num2str(fileNums(f))));
     ind = find(~cellfun(@isempty,ind)); %find index of correct rec file
 
     if ~isempty(ind)
@@ -46,7 +46,7 @@ for f = 1:length(fileNums) %loop around desired files
             configInfo = readTrodesFileConfig(configFileName);
         end
         
-        numChannels = str2double(configInfo.numChannels);
+        numChannels = length(channels);
         sampRate = str2double(configInfo.samplingRate);
         
         %save use-defined hardware channel # in the order of nTrode ID (0-based)
@@ -55,8 +55,8 @@ for f = 1:length(fileNums) %loop around desired files
         
         %create data structure for Kilosort: nChannels x nTimePoints
         for nTrode = 1:numChannels
-            cd (fullfile(rawdatadir, ['recording' num2str(numbers(1)) '.LFP'])) %navigate into rec files
-            temp = readTrodesExtractedDataFile(['recording' num2str(numbers(1)) '.LFP_nt' num2str(nTrode) 'ch1.dat']);
+            cd (fullfile(rawdatadir, ['recording' num2str(numbers(1)) '.raw'])) %navigate into rec files
+            temp = readTrodesExtractedDataFile(['recording' num2str(numbers(1)) '.raw_nt' num2str(nTrode) 'ch1.dat']);
             temp = temp.fields.data .* temp.voltage_scaling; %apply scaling factor to convert to uV
             
             data(nTrode,:) = temp;
