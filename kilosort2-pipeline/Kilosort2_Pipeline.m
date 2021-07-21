@@ -12,21 +12,21 @@ clear; close all;
 % NOTE: multiple brainReg only debugged for INTAN, need to implement for
 % spike gadgets ALP 7/14/19
 
-[params, dirs] = userProfiles_K2pipeline('Abby', 'ChronicFlicker');
-[allindex, ~] = getallindexALP(dirs.processeddatadir, dirs.spreadsheetdir, 0);
+[params, dirs] = userProfiles_K2pipeline('Steph', 'UpdateTask');
 
-allindex = allindex(allindex(:,1) == 45 | allindex(:,1) == 46,:); 
-dayindex = unique(allindex(:,1:2), 'rows');
+params.animal = 20;
+params.day = 210512;
+params.files = {[1,3:5]};
 
-params.animal = dayindex(:,1);
-params.day = dayindex(:,2);
-params.files = arrayfun(@(x) {allindex(allindex(:,2) == dayindex(x,2),3)}, 1:size(dayindex,1));
-
+params.probeChannels = {1:64}; %should be the 1 based indices of the channels in the data structure totalCh x samples
+params.brainReg = {'CA1'};
+        
 %% Set run options
 %First, run the preCuration step. 
 %After manually curation the Kilosort2 output, run the postCuration step. 
 
 run.preCuration = 1; %write specificed files to .bin for Kilosort
+run.kilosort = 1; %run kilosort spike sorting using main_kilosort script
 run.postCuration = 0; %get single unit times, get waveforms, and apply quality metrics
 
 %% Set rewriting options
@@ -54,10 +54,19 @@ if run.preCuration
     for d = 1:length(params.day)
         anrawdatadir = [dirs.rawdatadir, params.animalID, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
         tempfiledir = [dirs.processeddatadir, params.animalID, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
-        anclusterdir = [dirs.clusterdir, params.animalID, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
+        anclusterdir = [dirs.localclusterdir, params.animalID, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
         
         if ~exist(anclusterdir, 'dir'); mkdir(anclusterdir); end
         converttoBIN_K2(anrawdatadir, anclusterdir, params.files{d}, params.probeChannels, params.brainReg, dirs.clusfolder)
+    end
+end
+
+
+%% run kilosort algorithm
+if run.kilosort
+    for d = 1:length(params.day)
+        anclusterdir = [dirs.localclusterdir, params.animalID, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
+        main_kilosort(anclusterdir, dirs, params)
     end
 end
 
