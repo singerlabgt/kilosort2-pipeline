@@ -1,4 +1,4 @@
-function [params, dirs] = userProfiles_K2pipeline(user, project)
+function [params, dirs, th] = userProfiles_K2pipeline(user, project)
 %userProfiles_K2pipeline
 %
 %ALP 2/19/20
@@ -12,8 +12,15 @@ function [params, dirs] = userProfiles_K2pipeline(user, project)
 %    can be {''} if desired
 % animalID: ID letter
 
-%% Directories
+%% Quality control thresholds
+% !!!!!! Do not change without notifying all users !!!!!!
 
+th.SNR =  1;                    % >= 1 SNR
+th.ISI = 0.008;                 % <= 0.8% refractory period violations
+th.refractoryPeriod = 0.001;    % 1ms refractory period duration
+th.info = '>= th.SNR, <= th.ISI (frac violations/allISI), th.refractoryPeriod in s';
+% th.noiseOverlap
+% th.isolation
 
 %% User Profiles
 
@@ -35,19 +42,27 @@ if strcmp(user, 'Abby')
     end
 end
 
-%%%%%%%%%%%%%%%%% ----- Abby ----- %%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% ----- Steph ----- %%%%%%%%%%%%%%
 if strcmp(user, 'Steph')
     if strcmp(project, 'UpdateTask')
         params.animalID = 'S';
         params.numShanks = 2;
+        params.probeChannels = {1:64,65:128}; %should be the 1 based indices of the channels in the data structure totalCh x samples
         
+        %files for saving/loading data
         dirs.rawdatadir = '\\neuro-cloud\labs\singer\RawData\UpdateTask\';
         dirs.localclusterdir = 'C:\Users\sprince7\Desktop\TempKilosort\'; %this may be the same as processeddatadir
         dirs.remoteclusterdir = '\\neuro-cloud\labs\singer\ProcessedData\UpdateTask\';
         dirs.processeddatadir = '\\neuro-cloud\labs\singer\ProcessedData\UpdateTask\'; %may be the same as above  
         dirs.clusfolder = 'sorted\'; %subfolder that finished files will save into
         dirs.spreadsheetdir = '\\neuro-cloud.ad.gatech.edu\labs\singer\Steph\Code\update-project\doc\VRUpdateTaskEphysSummary.xlsx';
-
+        dirs.remoteprecurationdir = '\\neuro-cloud\labs\singer\KilosortData\update-project\'; %folder for transferring data between computers, storing precurated data
+        
+        %files to add to path for kilosort sorting
+        dirs.kilosortdir = 'C:\Users\sprince7\Documents\Kilosort-2.0';
+        dirs.npymatlabdir = 'C:\Users\sprince7\Documents\npy-matlab-master\npy-matlab';
+        dirs.configfile = '\\neuro-cloud.ad.gatech.edu\labs\singer\Steph\Code\kilosort2-pipeline\kilosort2-pipeline\configFiles\StephUpdateTaskConfig.m';
+        dirs.channelmapfile = '\\neuro-cloud.ad.gatech.edu\labs\singer\Steph\Code\kilosort2-pipeline\kilosort2-pipeline\channelMaps\A64Poly5_SpikeGadgets_RigC_kilosortChanMap.mat';
     end
 end
 

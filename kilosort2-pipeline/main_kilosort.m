@@ -1,28 +1,17 @@
-function main_kilosort(anclusterdir, dirs, params)
+function main_kilosort(anclusterdir, dirs, params, channels)
 
-addpath(genpath('C:\Users\sprince7\Documents\Kilosort-2.0')) % path to kilosort folder
-addpath('C:\Users\sprince7\Documents\npy-matlab-master\npy-matlab') % for converting to Phy
-rootZ = 'C:\Users\sprince7\Desktop\TempKilosort'; % the raw data binary file is in this folder
-rootH = 'H:\'; % path to temporary binary file (same size as data, should be on fast SSD) %TO DO NEED TO CHANGE
-pathToYourConfigFile = 'Y:\singer\Steph\Code\kilosort2-pipeline\kilosort2-pipeline\kilosortScripts\configFiles'; % take from Github folder and put it somewhere else (together with the master_file)
-chanMapFile = 'A64Poly5_SpikeGadgets_kilosortChanMap.mat';
+% setup parameters
+addpath(genpath(dirs.kilosortdir)) % path to kilosort folder
+addpath(dirs.npymatlabdir) % for converting to Phy
+rootZ = anclusterdir; % the raw data binary file is in this folder
 
-
-ops.trange = [0 Inf]; % time range to sort
-ops.NchanTOT = 64; % total number of channels in your recording
-
-run(fullfile(pathToYourConfigFile, 'Standard_Config.m'))
-ops.fproc       = fullfile(rootH, 'temp_wh.dat'); % proc file on a fast SSD
-ops.chanMap = fullfile(pathToYourConfigFile, chanMapFile);
+run(dirs.configfile)
+ops.fproc = fullfile(rootZ, 'temp_wh.dat'); % proc file on a fast SSD
+ops.NchanTOT = channels; % total number of channels in your recording
+ops.chanMap = dirs.channelmapfile;
 
 %% this block runs all the steps of the algorithm
 fprintf('Looking for data inside %s \n', rootZ)
-
-% is there a channel map file in this folder?
-fs = dir(fullfile(rootZ, 'chan*.mat'));
-if ~isempty(fs)
-    ops.chanMap = fullfile(rootZ, fs(1).name);
-end
 
 % find the binary file
 fs          = [dir(fullfile(rootZ, '*.bin')) dir(fullfile(rootZ, '*.dat'))];
@@ -62,26 +51,3 @@ fprintf('found %d good units \n', sum(rez.good>0))
 fprintf('Saving results to Phy  \n')
 rezToPhy(rez, rootZ);
 
-%% if you want to save the results to a Matlab file...
-
-% discard features in final rez file (too slow to save)
-rez.cProj = [];
-rez.cProjPC = [];
-
-% final time sorting of spikes, for apps that use st3 directly
-[~, isort]   = sortrows(rez.st3);
-rez.st3      = rez.st3(isort, :);
-
-% Ensure all GPU arrays are transferred to CPU side before saving to .mat
-rez_fields = fieldnames(rez);
-for i = 1:numel(rez_fields)
-    field_name = rez_fields{i};
-    if(isa(rez.(field_name), 'gpuArray'))
-        rez.(field_name) = gather(rez.(field_name));
-    end
-end
-
-% save final results as rez2
-fprintf('Saving final results in rez2  \n')
-fname = fullfile(rootZ, 'rez2.mat');
-save(fname, 'rez', '-v7.3');

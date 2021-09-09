@@ -9,44 +9,38 @@
 clear; close all;
 
 %% Set parameters
-% NOTE: multiple brainReg only debugged for INTAN, need to implement for
-% spike gadgets ALP 7/14/19
 
-[params, dirs] = userProfiles_K2pipeline('Steph', 'UpdateTask');
+%input animal info and project settings
+[params, dirs, th] = userProfiles_K2pipeline('Steph', 'UpdateTask');
 
 params.animal = 20;
 params.day = 210512;
-params.files = {[1,3:5]};
 
-params.probeChannels = {1:64}; %should be the 1 based indices of the channels in the data structure totalCh x samples
-params.brainReg = {'CA1'};
-        
+%get the animal info based on
+allindexT = selectindextable(dirs.spreadsheetdir, 'animal', params.animal, 'datesincluded', params.day);
+allindex = allindexT{:,{'Animal', 'Date','Recording'}};
+params.files = {allindex(:,3)};
+
+[sessions, ind] = unique(allindex(:,1:2), 'rows'); %define session as one date
+params.brainReg = allindexT{ind,{'RegAB','RegCD'}};
+
 %% Set run options
 %First, run the preCuration step. 
 %After manually curation the Kilosort2 output, run the postCuration step. 
 
-run.preCuration = 1; %write specificed files to .bin for Kilosort
-run.kilosort = 1; %run kilosort spike sorting using main_kilosort script
-run.postCuration = 0; %get single unit times, get waveforms, and apply quality metrics
+run.preCuration = 1;            %write specificed files to .bin for Kilosort
+run.kilosortScript = 1;         %run kilosort spike sorting using main_kilosort script
+run.kilosortGUI = 0;            %run kilosort spike sorting using the gui
+run.transferPrecuratedData = 1; %automatically transfer precurated data to server, removes locally
+run.postCuration = 0;           %get single unit times, get waveforms, and apply quality metrics
 
 %% Set rewriting options
 % set these options to force the code to rewrite the files specified below.
 % Otherwise, the pipeline will load up previously stored files if they
 % exist.
-
-rewrite.eeg = 1;
+rewrite.eeg = 0;
 rewrite.wf = 1;
 rewrite.qualitymetrics = 1;
-
-%% Quality control thresholds
-% !!!!!! Do not change without notifying all users !!!!!!
-
-th.SNR =  1;                    % >= 1 SNR
-th.ISI = 0.008;                 % <= 0.8% refractory period violations
-th.refractoryPeriod = 0.001;    % 1ms refractory period duration
-th.info = '>= th.SNR, <= th.ISI (frac violations/allISI), th.refractoryPeriod in s';
-% th.noiseOverlap
-% th.isolation
 
 %% write raw recording files to BIN for kilosort2
 
@@ -63,11 +57,25 @@ end
 
 
 %% run kilosort algorithm
-if run.kilosort
+if run.kilosortScript
     for d = 1:length(params.day)
-        anclusterdir = [dirs.localclusterdir, params.animalID, num2str(params.animal(d)), '_', num2str(params.day(d)), '\'];
-        main_kilosort(anclusterdir, dirs, params)
+        for br = 1:length(params.brainReg)
+            %run kilosort algorithm on data
+            anid = [params.animalID, num2str(params.animal(d)), '_', num2str(params.day(d))];
+            anclusterdir = fullfile(dirs.localclusterdir, anid, params.brainReg{br}, dirs.clusfolder, 'kilosort', filesep);
+            channels = max(params.probeChannels{br})-min(params.probeChannels{br})+1;
+            main_kilosort(anclusterdir, dirs, params, channels)
+            
+            %transfer precurated data
+            if run.transferPrecuratedData
+                fullclusterdir = fullfile(dirs.localclusterdir, anid, params.brainReg{br}, filesep); %only the top folder
+                transferKilosortPrecuratedData(fullclusterdir, dirs);
+            end
+        end
     end
+elseif run.kilosortGUI
+    kilosort
+    pause
 end
 
 %% get single unit times, waveforms, cluster properties, and apply quality metrics
@@ -81,12 +89,12 @@ if run.postCuration
             recinfo.brainReg = params.brainReg{br}; 
             
             anprocesseddatadir = [dirs.processeddatadir, params.animalID, num2str(params.animal(d)), '_', num2str(params.day(d)), '\', params.brainReg{br}, '\'];
-            anclusterdir = fullfile(dirs.clusterdir, [params.animalID, num2str(params.animal(d)), '_', num2str(params.day(d))], params.brainReg{br}, dirs.clusfolder, '\');
+            anclusterdir = fullfile(dirs.localclusterdir, [params.animalID, num2str(params.animal(d)), '_', num2str(params.day(d))], params.brainReg{br}, dirs.clusfolder, '\');
             figdir = fullfile(anclusterdir, 'figs');
             
             %get information about the curated units from the kilsort and
             %phy files
-            makeClusterStructure(anclusterdir, recinfo, params.brainReg{br}, dirs.clusfolder, params.numShanks)
+            makeClusterStructure(anclusterdir, recinfo, dirs.clusfolder, params, br)
             
             %get waveforms and other metrics about each cluster
             getWaveForms_K2(anprocesseddatadir, anclusterdir, recinfo, figdir, rewrite)
