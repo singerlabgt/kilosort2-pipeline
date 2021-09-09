@@ -47,13 +47,13 @@ trodesPath = fileparts(trodesPath);
 %windows vs mac/linux
 disp(['"',fullfile(trodesPath,'exportLFP'),'"', recFileString, ' -output ', fileNameMask]);
 if ispc
-    trodesPathTemp = 'C:\Users\sprince7\Documents\Trodes_2-0-0_Windows64\trodesexport';
-    eval(['!', trodesPathTemp, ' -raw -dio -analogio -abortbaddata 0 -usespikefilters 0 -lfplowpass -1 -uselfprefs 0 -lfpoutputrate 30000 ',...
+    eval(['!', fullfile(trodesPath,'trodesexport'), ' -raw -dio -analogio -abortbaddata 0 -usespikefilters 0 -userawrefs 0 ',...
         recFileString, ' -output ', fileNameMask])
 else
     escapeChar = '\ ';
     trodesPath = strrep(trodesPath, ' ', escapeChar);
-    eval(['!',fullfile(trodesPath,'exportLFP'), recFileString, ' -output ', fileNameMask]);
+    eval(['!',fullfile(trodesPath,'trodesexport'), ' -raw -dio -analogio -abortbaddata 0 -usespikefilters 0 -userawrefs 0 ',... 
+        recFileString, ' -output ', fileNameMask]);
 end
 
 
