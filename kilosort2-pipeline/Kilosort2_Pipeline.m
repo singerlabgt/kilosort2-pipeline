@@ -28,7 +28,7 @@ params.brainReg = allindexT{ind,{'RegAB','RegCD'}};
 %First, run the preCuration step. 
 %After manually curation the Kilosort2 output, run the postCuration step. 
 
-run.preCuration = 1;            %write specificed files to .bin for Kilosort
+run.preCuration = 0;            %write specificed files to .bin for Kilosort
 run.kilosortScript = 1;         %run kilosort spike sorting using main_kilosort script
 run.kilosortGUI = 0;            %run kilosort spike sorting using the gui
 run.transferPrecuratedData = 1; %automatically transfer precurated data to server, removes locally
@@ -77,6 +77,17 @@ elseif run.kilosortGUI
     kilosort
     pause
 end
+
+
+%% curate the data manually
+% run the following lines in a GitBash or Anaconda terminal
+% Note: the exact path of your directory is the output of 'anclusterdir' in 
+% matlab
+
+% cd "C:\Users\YourGTID\Desktop\TempKilosort\YourSessionID\YourBrainRegion\sorted\kilosort\s"
+% conda activate phy2
+% phy template-gui params.py
+
 
 %% get single unit times, waveforms, cluster properties, and apply quality metrics
 
