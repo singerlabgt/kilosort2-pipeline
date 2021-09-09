@@ -13,9 +13,9 @@ function RECtoBIN_K2(rawdatadir, targetdir, dtype, fileNames, fileNums, channels
 
 cd (rawdatadir)
 %% Extract .rec into .dat files, if not done already
-if ~isfolder(fullfile(rawdatadir, 'recording1.raw'))
-    parfor f = 1:length(fileNums)
-        extractUnfilteredLFPBinaryFiles(['recording' num2str(fileNums(f))])
+for f = 1:length(fileNums)
+    if ~isfolder(fullfile(rawdatadir, ['recording' num2str(fileNums(f)) '.raw']))
+        extractSpikeGadgetsBinaryFiles(['recording' num2str(fileNums(f))])
     end
 end
 
@@ -54,7 +54,8 @@ for f = 1:length(fileNums) %loop around desired files
         hwChan = [S.hw_chan]';
         
         %create data structure for Kilosort: nChannels x nTimePoints
-        for nTrode = 1:numChannels
+        for chanID = 1:numChannels
+            nTrode = channels(chanID);
             cd (fullfile(rawdatadir, ['recording' num2str(numbers(1)) '.raw'])) %navigate into rec files
             temp = readTrodesExtractedDataFile(['recording' num2str(numbers(1)) '.raw_nt' num2str(nTrode) 'ch1.dat']);
             temp = temp.fields.data .* temp.voltage_scaling; %apply scaling factor to convert to uV
@@ -86,7 +87,7 @@ end
 
 props.recLength = recLength;
 props.sampRate = sampRate;
-
+props.numChan = numChannels;
 props.hw_chan = hwChan;
 
 %save properties for fixing spike times after sorting
