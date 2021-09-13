@@ -60,7 +60,7 @@ for f = 1:length(fileNums) %loop around desired files
             temp = readTrodesExtractedDataFile(['recording' num2str(numbers(1)) '.raw_nt' num2str(nTrode) 'ch1.dat']);
             temp = temp.fields.data .* temp.voltage_scaling; %apply scaling factor to convert to uV
             
-            data(nTrode,:) = temp;
+            data(chanID,:) = temp;
             clear temp
         end
         
@@ -88,7 +88,7 @@ end
 props.recLength = recLength;
 props.sampRate = sampRate;
 props.numChan = numChannels;
-props.hw_chan = hwChan;
+props.hw_chan = hwChan(channels);
 
 %save properties for fixing spike times after sorting
 save([targetdir, 'sortingprops.mat'], 'props')
