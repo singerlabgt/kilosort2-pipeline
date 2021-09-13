@@ -24,7 +24,6 @@ end
 templates = readNPY([ankilosortdir, 'templates.npy']);
 spikeTemplates = readNPY([ankilosortdir, 'spike_templates.npy']);
 channelMap = readNPY([ankilosortdir, 'channel_map.npy']); %0-based
-paramsKilosort = loadParamsPy([ankilosortdir, 'params.py']);
 load([ankilosortdir, 'sortingprops.mat'], 'props')
 
 %only units classified as "good"
