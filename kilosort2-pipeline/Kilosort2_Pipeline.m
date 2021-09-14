@@ -6,18 +6,19 @@
 %
 % ALP 7/01/19
 
-clear; close all;
+%clear; close all;
 
 %% Set parameters
 
 %input animal info and project settings
 [params, dirs, th] = userProfiles_K2pipeline('Steph', 'UpdateTask');
 
-animals = [20];
-days = [210510:210521];
+animals = [17,25];
+daysincl = [210409:210415,210913];
+datesexcl = [nan];
 
 %get the animal info based on the inputs
-allindexT = selectindextable(dirs.spreadsheetdir, 'animal', animals, 'datesincluded', days);
+allindexT = selectindextable(dirs.spreadsheetdir, 'animal', animals, 'datesincluded', daysincl, 'datesexcluded', datesexcl);
 allindex = allindexT{:,{'Animal', 'Date','Recording'}};
 [sessions, ind] = unique(allindex(:,1:2), 'rows'); %define session as one date
 
@@ -40,7 +41,7 @@ rewrite.wf = 1;
 rewrite.qualitymetrics = 1;
 
 %% Run Kilosort Pipeline
-for d = 1:numel(sessions)
+for d = 1:size(sessions,1)
     %% get the animal/day info
     sessionInfo = allindex(ismember(allindex(:,1:2), sessions(d,:), 'rows'),:);
     params.files = sessionInfo(:,3);
