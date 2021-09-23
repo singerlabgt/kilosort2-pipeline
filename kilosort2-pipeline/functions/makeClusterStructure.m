@@ -41,7 +41,6 @@ end
 [~,max_site] = max(max(abs(templates),[],2),[],3);
 templateMaxChan = channelMap(max_site); %0 based, template 0 is at ind 1 - max channel of each template
 unitMaxChanAll = templateMaxChan(tempPerUnit(~isnan(tempPerUnit))+1); %only valid templates, +1 because template is 0 based 
-clusterGroup = clusterGroup(~isnan(tempPerUnit));
 %unitMaxChan = templateMaxChan(tempPerUnit+1); % +1 because template is 0 based 
 unitMaxChan = double(unitMaxChanAll(clusterGroup == 2)); %only good units
 
@@ -56,11 +55,10 @@ unitMaxChan = double(unitMaxChanAll(clusterGroup == 2)); %only good units
 %the accurate native channel folder to use - SMP 20210909
 if isfield(props, 'hw_chan')
     channelMap = props.hw_chan; %0-based hwChan numbers (folder names)
-    channelMapProbeTemp = channelMap(params.probeChannels{probe});
     if probe == 1
-        channelMapProbe = channelMapProbeTemp;
+        channelMapProbe = channelMap;
     elseif probe == 2
-        channelMapProbe = channelMapProbeTemp - max(params.probeChannels{1});
+        channelMapProbe = channelMap - max(params.probeChannels{1});
     end
     unitMaxChan = channelMapProbe(unitMaxChan + 1); %have to add 1 to unitMaxChan to use as indices 
 end
