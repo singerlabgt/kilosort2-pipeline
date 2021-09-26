@@ -13,8 +13,8 @@
 %input animal info and project settings
 [params, dirs, th] = userProfiles_K2pipeline('Steph', 'UpdateTask');
 
-animals = [17,25];
-daysincl = [210409:210415,210913];
+animals = [25];
+daysincl = [210913];
 datesexcl = [nan];
 
 %get the animal info based on the inputs
@@ -26,10 +26,11 @@ allindex = allindexT{:,{'Animal', 'Date','Recording'}};
 %First, run the preCuration step. 
 %After manually curation the Kilosort2 output, run the postCuration step. 
 
-run.preCuration = 1;            %write specificed files to .bin for Kilosort
-run.kilosortScript = 1;         %run kilosort spike sorting using main_kilosort script
+run.preCuration = 0;            %write specificed files to .bin for Kilosort
+run.kilosortScript = 0;         %run kilosort spike sorting using main_kilosort script
 run.kilosortGUI = 0;            %run kilosort spike sorting using the gui
-run.transferPrecuratedData = 1; %automatically transfer precurated data to server, removes locally
+run.transferPrecuratedData = 0; %automatically transfer precurated data to server, removes locally
+run.transferPostcuratedData = 0; %automatically transfer postcurated data to server, removes locally
 run.postCuration = 0;           %get single unit times, get waveforms, and apply quality metrics
 
 %% Set rewriting options
@@ -114,6 +115,11 @@ for d = 1:size(sessions,1)
             %apply quality metrics to all clusters and create outputs
             %structures
             applyQualityMetrics(anclusterdir, recinfo, rewrite.qualitymetrics, th)
+            
+            %transfer precurated data
+            if run.transferPostcuratedData
+                transferKilosortPostcuratedData(anclusterdir, dirs);
+            end
         end
     end
 end
