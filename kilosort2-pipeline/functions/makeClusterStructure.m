@@ -26,6 +26,12 @@ spikeTemplates = readNPY([ankilosortdir, 'spike_templates.npy']);
 channelMap = readNPY([ankilosortdir, 'channel_map.npy']); %0-based
 load([ankilosortdir, 'sortingprops.mat'], 'props')
 
+%check that all units were assigned to good/mua/noise
+fid = fopen([ankilosortdir, 'cluster_Amplitude.tsv']);
+clusterInfo = textscan(fid, '%s%s');
+fclose(fid);
+assert(numel(clusterInfo{1})-1 == numel(clusterID), 'Warning: unsorted clusters in your file, check that the data was saved correctly and fully curated');
+
 %only units classified as "good"
 goodUnits = clusterID(clusterGroup == 2);
 
