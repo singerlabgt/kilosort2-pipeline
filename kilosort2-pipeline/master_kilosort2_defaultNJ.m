@@ -1,5 +1,5 @@
 addpath(genpath('C:\Users\njeong9\Documents\Kilosort2')) % path to kilosort folder
-addpath('C:\Users\njeong9\OneDrive - Emory University\Documents\npy-matlab')
+addpath('C:\Users\njeong9\OneDrive - Emory University\Documents\npy-matlab\npy-matlab\')
 pathToYourConfigFile = '\\ad.gatech.edu\bme\labs\singer\Nuri\Code\kilosort2-pipeline\kilosort2-pipeline';
 % pathToYourConfigFile = 'C:\Users\njeong9\OneDrive - Emory University\Documents\Kilosort2';
 
