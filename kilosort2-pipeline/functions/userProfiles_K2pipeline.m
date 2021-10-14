@@ -40,7 +40,7 @@ if strcmp(user, 'Nuri')
     if strcmp(project, 'VR_Novelty')
         params.probeChannels = {1:64}; %should be the 1 based indices of the channels in the data structure totalCh x samples
         params.brainReg = {'CA3'};
-        params.animalID = 'N';
+        params.animalIdenLetter = 'N';
         params.numShanks = 2;
         
         dirs.rawdatadir = '\\ad.gatech.edu\bme\labs\singer\RawData\VR_Novelty\';
