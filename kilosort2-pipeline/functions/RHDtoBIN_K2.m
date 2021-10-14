@@ -66,6 +66,7 @@ for j = 1:numRecs
             [intandata, ~] = read_Intan_RHD2000_fileALP_interpgaps([datafolder{j}, ...
                 files(indrightfile(i)).name]);
             data = intandata.amplifier_data(probechannels,:); 
+            samprate = intandata.fileinfo.amplifier_sample_rate;
             clear intandata
             %end ALP 5/5/21
             
@@ -94,7 +95,7 @@ for j = 1:numRecs
 end
 
 props.recLength = recLength;
-props.sampRate = 20000;
+props.sampRate = samprate;
 props.fileNums = filenum;
 props.numChan = length(probechannels); 
 props.date = datestr(now); 

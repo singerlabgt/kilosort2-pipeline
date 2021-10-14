@@ -35,6 +35,22 @@ if strcmp(user, 'Abby')
     end
 end
 
+%%%%%%%%%%%%%%%%% ----- Nuri ----- %%%%%%%%%%%%%%
+if strcmp(user, 'Nuri')
+    if strcmp(project, 'VR_Novelty')
+        params.probeChannels = {1:64}; %should be the 1 based indices of the channels in the data structure totalCh x samples
+        params.brainReg = {'CA3'};
+        params.animalIdenLetter = 'N';
+        params.numShanks = 2;
+        
+        dirs.rawdatadir = '\\ad.gatech.edu\bme\labs\singer\RawData\VR_Novelty\';
+        dirs.processeddatadir = '\\ad.gatech.edu\bme\labs\singer\ProcessedData\VR_Novelty\';
+        dirs.clusterdir = dirs.processeddatadir;        
+        dirs.clusfolder = 'sorted\'; %subfolder that finished files will save into
+        dirs.spreadsheetdir = '\\ad.gatech.edu\bme\labs\singer\Nuri\Spreadsheets\VR_NoveltySpreadsheet.xlsx';
+    end
+end
+
 %%%%%%%%%%%%%%%%% ----- New User ----- %%%%%%%%%%%%%%%
 
 if strcmp(user, 'NewUser')

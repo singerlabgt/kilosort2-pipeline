@@ -12,10 +12,21 @@ clear; close all;
 % NOTE: multiple brainReg only debugged for INTAN, need to implement for
 % spike gadgets ALP 7/14/19
 
-[params, dirs] = userProfiles_K2pipeline('Abby', 'ChronicFlicker');
-[allindex, ~] = getallindexALP(dirs.processeddatadir, dirs.spreadsheetdir, 0);
+%% %%%%%%%%%%%%%%%%%%% to change here %%%%%%%%%%%%%%%%%%%%
+username = 'Nuri';
+projectname = 'VR_Novelty';
+animals = [45];
+recdays = []; %if looking at a specific day's recording
+%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-allindex = allindex(allindex(:,1) == 45 | allindex(:,1) == 46,:); 
+[params, dirs] = userProfiles_K2pipeline(username, projectname);
+[allindex, identifier] = getallindex_basic(dirs.processeddatadir,...
+    dirs.spreadsheetdir, 'rewritefileinfo', 0);
+if isempty(recdays)
+    allindex = allindex(ismember(allindex(:,1), animals),:); 
+else
+    allindex = allindex(ismember(allindex(:,2), recdays),:); 
+end
 dayindex = unique(allindex(:,1:2), 'rows');
 
 params.animal = dayindex(:,1);
