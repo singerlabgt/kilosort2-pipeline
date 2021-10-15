@@ -38,13 +38,6 @@ for d = 1:length(recDays)
     load(fullfile(rootBIN,'sortingprops.mat'))
     
     
-    % determine channel map based on ephys system used
-    if ~isempty(dir(fullfile(fullfile(dirs.rawdatadir, [iden, num2str(index(1)) '_' num2str(index(2))]), '*.rhd')))
-        ops.chanMap = fullfile(pathToYourConfigFile, 'Takahashi_Intan_um_kilosortChanMap.mat');
-    elseif ~isempty(dir(fullfile(fullfile(dirs.rawdatadir, [iden, num2str(index(1)) '_' num2str(index(2))]), '*.rec')))
-        ops.chanMap = fullfile(pathToYourConfigFile, 'A64Poly5_SpikeGadgetsChanMap_200213.mat');
-    end
-    
     %% master-kilosort
     run(fullfile(pathToYourConfigFile, 'configFileNuri.m'))
     ops.fproc       = fullfile(rootBIN, 'temp_wh.dat');    
@@ -54,10 +47,11 @@ for d = 1:length(recDays)
     %% this block runs all the steps of the algorithm
     fprintf('Looking for data inside %s \n', rootBIN)
     
-    % is there a channel map file in this folder?
-    fs = dir(fullfile(pathToYourConfigFile, '*.mat'));
-    if ~isempty(fs)
-        ops.chanMap = fullfile(pathToYourConfigFile, fs(1).name);
+    % determine channel map based on ephys system used
+    if ~isempty(dir(fullfile(fullfile(dirs.rawdatadir, [iden, num2str(index(1)) '_' num2str(index(2))]), '*.rhd')))
+        ops.chanMap = fullfile(pathToYourConfigFile, 'Takahashi_Intan_um_kilosortChanMap.mat');
+    elseif ~isempty(dir(fullfile(fullfile(dirs.rawdatadir, [iden, num2str(index(1)) '_' num2str(index(2))]), '*.rec')))
+        ops.chanMap = fullfile(pathToYourConfigFile, 'A64Poly5_SpikeGadgetsChanMap_200213.mat');
     end
     
     % find the binary file
