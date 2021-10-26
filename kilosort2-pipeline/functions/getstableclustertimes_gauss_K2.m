@@ -30,7 +30,7 @@ function [stabletimes, meanFR, peakFR] = getstableclustertimes_gauss_K2(recinfo,
 totaltime = 0;
 
 %% get spikes and recording file durations
-for i = 1:size(recinfo.files,2)
+for i = 1:length(recinfo.files)
     if i == 1
         fr.totalspiketimes = [];
         fr.totalspiketimes = allfiles{i}.rawclusters(unit).spikeInds'./(props.sampRate/1000); %put into ms
@@ -128,7 +128,7 @@ if min(fr.gaussfr(100*60:end-100*60)) < 0.1*bmean %to try and help with edge eff
     end
     
 else %else whole time stable
-    for file = 1:size(recinfo.files,2)
+    for file = 1:length(recinfo.files)
         fr.incltimes = [0 totaltime];
         fr.stabletimes(file,:) = [0 (switchdur(file,2)-switchdur(file,1))];
     end
