@@ -13,14 +13,10 @@ clear; close all;
 % spike gadgets ALP 7/14/19
 
 [params, dirs] = userProfiles_K2pipeline('Abby', 'ChronicFlicker');
-[allindex, ~] = getallindexALP(dirs.processeddatadir, dirs.spreadsheetdir, 0);
 
-allindex = allindex(allindex(:,1) == 45 | allindex(:,1) == 46,:); 
-dayindex = unique(allindex(:,1:2), 'rows');
-
-params.animal = dayindex(:,1);
-params.day = dayindex(:,2);
-params.files = arrayfun(@(x) {allindex(allindex(:,2) == dayindex(x,2),3)}, 1:size(dayindex,1));
+params.animal = [45];
+params.day = [210430];
+params.files = {1:3};
 
 %% Set run options
 %First, run the preCuration step. 

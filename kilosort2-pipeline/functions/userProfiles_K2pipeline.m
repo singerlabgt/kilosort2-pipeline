@@ -19,20 +19,37 @@ function [params, dirs] = userProfiles_K2pipeline(user, project)
 
 %%%%%%%%%%%%%%%%% ----- Abby ----- %%%%%%%%%%%%%%
 if strcmp(user, 'Abby')
-    if strcmp(project, 'ChronicFlicker')
+    if strcmp(project, 'ChronicFlicker_CA1')
         params.probeChannels = {65:128}; %should be the 1 based indices of the channels in the data structure totalCh x samples
-        params.brainReg = {'CA1'};
+        params.brainReg = {'CA1'}; 
         params.animalID = 'A';
         params.numShanks = 2;
         
         dirs.rawdatadir = '\\neuro-cloud\labs\singer\RawData\Flicker_Chronic_VR\';
-        dirs.clusterdir = 'C:\Users\apaulson3\Desktop\TempKilosort\'; %this may be the same as processeddatadir
-        %dirs.clusterdir = '\\neuro-cloud\labs\singer\ProcessedData\Flicker_7Day_VR\';
+        %dirs.clusterdir = 'C:\Users\apaulson3\Desktop\TempKilosort\'; %this may be the same as processeddatadir
+        dirs.clusterdir = '\\neuro-cloud\labs\singer\ProcessedData\Flicker_7Day_VR\'; %rerunning post proc bc bug in stable tiems      
         dirs.processeddatadir = '\\neuro-cloud\labs\singer\ProcessedData\Flicker_7Day_VR\'; %may be the same as above  
         dirs.clusfolder = 'sorted\'; %subfolder that finished files will save into
         dirs.spreadsheetdir = '\\neuro-cloud.ad.gatech.edu\labs\singer\Abby\experimentspreadsheets\chronicflicker_annulartrack_ephys.xls';
 
     end
+    
+    %%%%%%%%%%%%%%%%% ----- Abby ----- %%%%%%%%%%%%%%
+if strcmp(user, 'Abby')
+    if strcmp(project, 'ChronicFlicker_CA3')
+        params.probeChannels = {1:64}; %should be the 1 based indices of the channels in the data structure totalCh x samples
+        params.brainReg = {'CA3'};
+        params.animalID = 'A';
+        params.numShanks = 2;
+        
+        dirs.rawdatadir = '\\neuro-cloud\labs\singer\RawData\Flicker_Chronic_VR\';
+        dirs.clusterdir = 'C:\Users\apaulson3\Desktop\TempKilosort_CA3\'; %this may be the same as processeddatadir
+        %dirs.clusterdir = '\\neuro-cloud\labs\singer\Abby\kilosort\exampleData\kilosortFiles\'; 
+        dirs.processeddatadir = '\\neuro-cloud\labs\singer\ProcessedData\Flicker_7Day_VR\'; %may be the same as above  
+        dirs.clusfolder = 'sorted\'; %subfolder that finished files will save into
+        dirs.spreadsheetdir = '\\neuro-cloud.ad.gatech.edu\labs\singer\Abby\experimentspreadsheets\chronicflicker_annulartrack_ephys.xls';
+    end
+end
 end
 
 %%%%%%%%%%%%%%%%% ----- New User ----- %%%%%%%%%%%%%%%

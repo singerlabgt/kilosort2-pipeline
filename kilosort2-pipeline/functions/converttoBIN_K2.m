@@ -1,4 +1,4 @@
-function converttoBIN_K2(rawdatadir, clusterdir, fnums, probes, brainreg, clusfolder)
+function converttoBIN_K2(rawdatadir, clusterdir, fnums, probes, brainreg, clusfolder, dayindex)
 %CONVERTTOBIN_K2 Convert raw recording files to .bin. 
 %   Inputs:
 %       rawdatadir: location of raw recording files
@@ -24,7 +24,7 @@ for p = 1:length(probes)
         perRegDir = fullfile(clusterdir, brainreg{p}, clusfolder, 'kilosort\');
         if ~exist(perRegDir, 'dir'); mkdir(perRegDir); end
         RHDtoBIN_K2(rawdatadir, perRegDir, 'int16', ...
-            files.nums, probes{p})
+            files.nums, probes{p}, dayindex)
     elseif ~isempty(files.spikegadgets)
         disp('Spike Gadgets files detected.')
         perRegDir = fullfile(clusterdir, brainreg{p}, clusfolder, 'kilosort\');

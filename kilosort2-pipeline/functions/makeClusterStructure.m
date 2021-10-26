@@ -4,7 +4,7 @@ function makeClusterStructure(clusterdir, recinfo, brainReg, clusfolder, numShan
 
 
 files = recinfo.files; 
-
+dayindex = recinfo.index(1,2); 
 
 ankilosortdir = fullfile(clusterdir, 'kilosort\');
 anclusterdir = fullfile(clusterdir, '\');
@@ -48,6 +48,14 @@ if isfield(props, 'hw_chan')
     channelMap = props.hw_chan; %0-based hwChan numbers (folder names)
     unitMaxChan = channelMap(unitMaxChan + 1); %have to add 1 to unitMaxChan to use as indices
 end
+
+%special case!!! ALP 8/26/21
+if dayindex == 201001
+    %only one shank on this day, actual channels are 32:63 but kilosort
+    %will read them out as 0:31
+    unitMaxChan = unitMaxChan + 32; %add 32 because only one shank on this day
+end
+% end special case
 
 %loop over recordings - this could be improved - how does Lu do it?
 for f = 1:length(files)

@@ -1,4 +1,4 @@
-function RHDtoBIN_K2(datapath, targetpath, dtype, filenum, probechannels)
+function RHDtoBIN_K2(datapath, targetpath, dtype, filenum, probechannels, dayindex)
 % RHDTOBIN_K2   Convert intan .rhd files to .bin for Kilosort2
 %
 % Read an RHD file and write it in binary form to a new file
@@ -96,8 +96,11 @@ end
 props.recLength = recLength;
 props.sampRate = 20000;
 props.fileNums = filenum;
-props.numChan = length(probechannels); 
+props.numChan = length(probechannels);
+props.channelInds = probechannels; 
 props.date = datestr(now); 
+props.datapath = datapath;
+props.dayindex = dayindex; 
 
 %save properties for fixing spike times after sorting
 save([targetpath, 'sortingprops.mat'], 'props')
