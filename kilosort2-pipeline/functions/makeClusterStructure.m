@@ -1,7 +1,9 @@
-function makeClusterStructure(clusterdir, recinfo, brainReg, clusfolder, numShanks)
+function makeClusterStructure(clusterdir, recinfo, clusfolder, params, probe)
 % makeClusterStructure Make post curation data structure for Kilosort2.
 %   ALP 7/14/19
 
+brainReg = params.brainReg{probe};
+numShanks = params.numShanks;
 
 files = recinfo.files; 
 
@@ -22,8 +24,13 @@ end
 templates = readNPY([ankilosortdir, 'templates.npy']);
 spikeTemplates = readNPY([ankilosortdir, 'spike_templates.npy']);
 channelMap = readNPY([ankilosortdir, 'channel_map.npy']); %0-based
-params = loadParamsPy([ankilosortdir, 'params.py']);
 load([ankilosortdir, 'sortingprops.mat'], 'props')
+
+%check that all units were assigned to good/mua/noise
+fid = fopen([ankilosortdir, 'cluster_Amplitude.tsv']);
+clusterInfo = textscan(fid, '%s%s');
+fclose(fid);
+assert(numel(clusterInfo{1})-1 == numel(clusterID), 'Warning: unsorted clusters in your file, check that the data was saved correctly and fully curated');
 
 %only units classified as "good"
 goodUnits = clusterID(clusterGroup == 2);
@@ -39,14 +46,27 @@ end
 %get max channel per cluster based on max template amplitude
 [~,max_site] = max(max(abs(templates),[],2),[],3);
 templateMaxChan = channelMap(max_site); %0 based, template 0 is at ind 1 - max channel of each template
-unitMaxChan = templateMaxChan(tempPerUnit(~isnan(tempPerUnit))+1); %only valid templates, +1 because template is 0 based 
+unitMaxChanAll = templateMaxChan(tempPerUnit(~isnan(tempPerUnit))+1); %only valid templates, +1 because template is 0 based 
 %unitMaxChan = templateMaxChan(tempPerUnit+1); % +1 because template is 0 based 
-unitMaxChan = double(unitMaxChan(clusterGroup == 2)); %only good units
+unitMaxChan = double(unitMaxChanAll(clusterGroup == 2)); %only good units
 
 %for SpikeGadgets, use hardware channel numbers for maxChan - NJ 03.10.2020
+%this only happens for SG, bc the data is in the nTrode order (which was
+%already ordered from top to bottom) and our channelMap is just
+%0:numChans, and the coordinates were inputted to make sure they were accurate 
+%but we want to save the data in the folder with the hw chan name
+%by contrast, in Intan the data is saved in the native channel order (which
+%is not sorted) and so the channelMap actually  contains a mix of numbers
+%to get the channels into the sorted order. So the channelMap already has
+%the accurate native channel folder to use - SMP 20210909
 if isfield(props, 'hw_chan')
     channelMap = props.hw_chan; %0-based hwChan numbers (folder names)
-    unitMaxChan = channelMap(unitMaxChan + 1); %have to add 1 to unitMaxChan to use as indices
+    if probe == 1
+        channelMapProbe = channelMap;
+    elseif probe == 2
+        channelMapProbe = channelMap - max(params.probeChannels{1});
+    end
+    unitMaxChan = channelMapProbe(unitMaxChan + 1); %have to add 1 to unitMaxChan to use as indices 
 end
 
 %loop over recordings - this could be improved - how does Lu do it?

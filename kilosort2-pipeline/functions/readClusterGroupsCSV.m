@@ -11,6 +11,7 @@ function [cids, cgs] = readClusterGroupsCSV(filename)
 fid = fopen(filename);
 C = textscan(fid, '%s%s');
 fclose(fid);
+assert(strcmp(C{2}(1),'group'), 'Warning: data was not manually curated');
 
 cids = cellfun(@str2num, C{1}(2:end), 'uni', false);
 ise = cellfun(@isempty, cids);

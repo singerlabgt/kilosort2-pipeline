@@ -24,8 +24,8 @@ elseif (useRefs > 1) || (useRefs < 0)
 end
 
 %get rid of the annoying underscore in folder name - NJ 08.16.2020
-fileString = regexp(fileNameMask, '_');
-fileNameMask = fileNameMask(1:fileString-1);
+%fileString = regexp(fileNameMask, '_');
+%fileNameMask = fileNameMask(1:fileString-1);
 recFiles = dir([fileNameMask,'*.rec']);
 
 recFileString = [];
@@ -47,12 +47,13 @@ trodesPath = fileparts(trodesPath);
 %windows vs mac/linux
 disp(['"',fullfile(trodesPath,'exportLFP'),'"', recFileString, ' -output ', fileNameMask]);
 if ispc
-    eval(['!"',fullfile(trodesPath,'exportLFP'),'"', recFileString, ' -abortbaddata 0 -usespikefilters 0 -lowpass -1 -highpass -1 -userefs 0 -outputrate 30000 -output ', fileNameMask]);
-    eval(['!"',fullfile(trodesPath,'exportanalog'),'"', recFileString, ' -output ', fileNameMask]);
+    eval(['!', fullfile(trodesPath,'trodesexport'), ' -raw -dio -analogio -abortbaddata 0 -usespikefilters 0 -userawrefs 0 ',...
+        recFileString, ' -output ', fileNameMask])
 else
     escapeChar = '\ ';
     trodesPath = strrep(trodesPath, ' ', escapeChar);
-    eval(['!',fullfile(trodesPath,'exportLFP'), recFileString, ' -output ', fileNameMask]);
+    eval(['!',fullfile(trodesPath,'trodesexport'), ' -raw -dio -analogio -abortbaddata 0 -usespikefilters 0 -userawrefs 0 ',... 
+        recFileString, ' -output ', fileNameMask]);
 end
 
 
