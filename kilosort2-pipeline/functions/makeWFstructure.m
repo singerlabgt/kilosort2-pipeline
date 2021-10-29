@@ -32,7 +32,9 @@ for f = 1:length(recinfo.files)
             b = filtdat(a) == min(filtdat(a));
             minIdx = a(b); %index of minimum waveform amplitude
             waveforminds = round(minIdx-tAroundSpike(1)):round(minIdx+tAroundSpike(2));
-            tempWFs(spikeCount, :) = filtdat(waveforminds);
+            if waveforminds(end) <= length(filtdat) %%NJ added 10/29/21 bc sometimes last waveform idx still went over filtdata length
+                tempWFs(spikeCount, :) = filtdat(waveforminds);
+            end
         end
         spikeCount = spikeCount+1;       
     end

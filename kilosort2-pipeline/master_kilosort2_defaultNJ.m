@@ -1,6 +1,7 @@
 addpath(genpath('C:\Users\njeong9\Documents\Kilosort2')) % path to kilosort folder
 addpath('C:\Users\njeong9\OneDrive - Emory University\Documents\npy-matlab\npy-matlab\')
 pathToYourConfigFile = '\\ad.gatech.edu\bme\labs\singer\Nuri\Code\kilosort2-pipeline\kilosort2-pipeline';
+cd(pathToYourConfigFile)
 % pathToYourConfigFile = 'C:\Users\njeong9\OneDrive - Emory University\Documents\Kilosort2';
 
 % badChans = flags.badChans;
@@ -8,8 +9,8 @@ pathToYourConfigFile = '\\ad.gatech.edu\bme\labs\singer\Nuri\Code\kilosort2-pipe
 %% %%%%%%%%%%%%%%%%%%% to change here %%%%%%%%%%%%%%%%%%%%
 username = 'Nuri';
 projectname = 'VR_Novelty';
-animals = [45];
-datesincl = [];
+animals = [46];
+datesincl = [211017];
 datesexcl = [];
 
 
@@ -25,21 +26,22 @@ if ~isempty(datesexcl)
     allindex = allindex(~ismember(allindex(:,2),datesexcl),:);
 end
 brainReg = params.brainReg{1}; %CA3
-iden = params.animalIdenLetter;
+iden = params.animalID;
 
 
 %% for each unique recording day, run master Kilosort2 script
-recDays = unique(allindex(:,2));
-for d = 1:length(recDays)
-    index = allindex(allindex(:,2) == recDays(d),:);
-    index = unique(index(:,1:2));
+sessions = unique(allindex(:,1:2), 'rows'); %define session as one date
+
+for d = 1:size(sessions,1)
+    index = sessions(d, 1:2);
     % the binary file is in this folder
     rootBIN = fullfile(dirs.processeddatadir, [iden, num2str(index(1)) '_' num2str(index(2))], brainReg, 'sorted','kilosort');
     load(fullfile(rootBIN,'sortingprops.mat'))
     
     
     %% master-kilosort
-    run(fullfile(pathToYourConfigFile, 'configFileNuri.m'))
+    configFileNuri
+%     run(fullfile(pathToYourConfigFile, 'configFileNuri.m'));
     ops.fproc       = fullfile(rootBIN, 'temp_wh.dat');    
     ops.trange = [0 Inf]; % time range to sort
     ops.NchanTOT    = 64; % total number of channels in your recording

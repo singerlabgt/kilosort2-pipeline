@@ -16,38 +16,43 @@ clear; close all;
 username = 'Nuri';
 projectname = 'VR_Novelty';
 animals = [45];
-recdays = []; %if looking at a specific day's recording
+datesincl = [];
+datesexcl = [211012:211014]; %if looking at a specific day's recording
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 [params, dirs] = userProfiles_K2pipeline(username, projectname);
 [allindex, identifier] = getallindex_basic(dirs.processeddatadir,...
     dirs.spreadsheetdir, 'rewritefileinfo', 0);
-if isempty(recdays)
-    allindex = allindex(ismember(allindex(:,1), animals),:); 
-else
-    allindex = allindex(ismember(allindex(:,2), recdays),:); 
+
+allindex = allindex(ismember(allindex(:,1), animals),:);
+if ~isempty(datesincl)
+    allindex = allindex(ismember(allindex(:,2),datesincl),:);
 end
-dayindex = unique(allindex(:,1:2), 'rows');
+if ~isempty(datesexcl)
+    allindex = allindex(~ismember(allindex(:,2),datesexcl),:);
+end
+
+dayindex = sortrows(unique(allindex(:,1:2), 'rows'),'descend');
 
 params.animal = dayindex(:,1);
 params.day = dayindex(:,2);
-params.files = arrayfun(@(x) {allindex(allindex(:,2) == dayindex(x,2),3)}, 1:size(dayindex,1));
+params.files = arrayfun(@(x) {allindex(allindex(:,1) == dayindex(x,1) & allindex(:,2) == dayindex(x,2),3)}, 1:size(dayindex,1));
 
 %% Set run options
 %First, run the preCuration step. 
 %After manually curation the Kilosort2 output, run the postCuration step. 
 
-run.preCuration = 1; %write specificed files to .bin for Kilosort
-run.postCuration = 0; %get single unit times, get waveforms, and apply quality metrics
+run.preCuration = 0; %write specificed files to .bin for Kilosort
+run.postCuration = 1; %get single unit times, get waveforms, and apply quality metrics
 
 %% Set rewriting options
 % set these options to force the code to rewrite the files specified below.
 % Otherwise, the pipeline will load up previously stored files if they
 % exist.
 
-rewrite.eeg = 1;
+rewrite.eeg = 0;
 rewrite.wf = 1;
-rewrite.qualitymetrics = 1;
+rewrite.qualitymetrics = 0;
 
 %% Quality control thresholds
 % !!!!!! Do not change without notifying all users !!!!!!

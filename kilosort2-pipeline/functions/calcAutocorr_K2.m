@@ -20,9 +20,9 @@ function fr = calcAutocorr_K2(clusterdir, recinfo, unitIDs)
 load(fullfile(clusterdir, 'kilosort', 'sortingprops.mat'))
 
 %use only post-quality check units if exists, and rawclusters if not
-if isfile(fullfile(clusterdir, 'goodclusters_allrec.mat'))
-    load(fullfile(clusterdir, 'goodclusters_allrec.mat'))
-    clusters = goodclusters_allrec;
+if isfile(fullfile(clusterdir, 'clusters_allrec.mat'))
+    load(fullfile(clusterdir, 'clusters_allrec.mat'))
+    clusters = clusters_allrec;
 else
     load(fullfile(clusterdir, 'rawclusters_allrec.mat')) %edit from rawclusters(recNum) bc indices all restart from 1: NJ 09.06.19
     clusters = rawclusters_allrec;
