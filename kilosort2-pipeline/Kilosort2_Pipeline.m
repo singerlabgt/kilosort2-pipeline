@@ -15,9 +15,9 @@ clear; close all;
 %% %%%%%%%%%%%%%%%%%%% to change here %%%%%%%%%%%%%%%%%%%%
 username = 'Nuri';
 projectname = 'VR_Novelty';
-animals = [45];
+animals = [11,18,21,24];
 datesincl = [];
-datesexcl = [211012:211014]; %if looking at a specific day's recording
+datesexcl = []; %if looking at a specific day's recording
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 [params, dirs] = userProfiles_K2pipeline(username, projectname);
@@ -51,8 +51,8 @@ run.postCuration = 1; %get single unit times, get waveforms, and apply quality m
 % exist.
 
 rewrite.eeg = 0;
-rewrite.wf = 1;
-rewrite.qualitymetrics = 0;
+rewrite.wf = 0;
+rewrite.qualitymetrics = 1;
 
 %% Quality control thresholds
 % !!!!!! Do not change without notifying all users !!!!!!

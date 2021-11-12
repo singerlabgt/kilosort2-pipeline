@@ -86,7 +86,9 @@ end
 
 props.recLength = recLength;
 props.sampRate = sampRate;
-
+props.fileNums = fileNums;
+props.numChan = length(channels); 
+props.date = datestr(now); 
 props.hw_chan = hwChan;
 
 %save properties for fixing spike times after sorting

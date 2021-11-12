@@ -44,9 +44,12 @@ unitMaxChan = templateMaxChan(tempPerUnit(~isnan(tempPerUnit))+1); %only valid t
 unitMaxChan = double(unitMaxChan(clusterGroup == 2)); %only good units
 
 %for SpikeGadgets, use hardware channel numbers for maxChan - NJ 03.10.2020
-if isfield(props, 'hw_chan')
+if isfield(props, 'hw_chan') 
     channelMap = props.hw_chan; %0-based hwChan numbers (folder names)
     unitMaxChan = channelMap(unitMaxChan + 1); %have to add 1 to unitMaxChan to use as indices
+end
+if ~isfield(props, 'numChan')
+    props.numChan = 64; %old structure did not incldue this info so adding now, NJ 11/12/21
 end
 
 %loop over recordings - this could be improved - how does Lu do it?
