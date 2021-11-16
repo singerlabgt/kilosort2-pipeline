@@ -9,8 +9,8 @@ cd(pathToYourConfigFile)
 %% %%%%%%%%%%%%%%%%%%% to change here %%%%%%%%%%%%%%%%%%%%
 username = 'Nuri';
 projectname = 'VR_Novelty';
-animals = [46];
-datesincl = [211017];
+animals = [41];
+datesincl = [];
 datesexcl = [];
 
 

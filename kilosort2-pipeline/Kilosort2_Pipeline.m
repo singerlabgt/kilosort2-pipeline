@@ -15,7 +15,7 @@ clear; close all;
 %% %%%%%%%%%%%%%%%%%%% to change here %%%%%%%%%%%%%%%%%%%%
 username = 'Nuri';
 projectname = 'VR_Novelty';
-animals = [11,18,21,24];
+animals = [41];
 datesincl = [];
 datesexcl = []; %if looking at a specific day's recording
 %% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -32,7 +32,7 @@ if ~isempty(datesexcl)
     allindex = allindex(~ismember(allindex(:,2),datesexcl),:);
 end
 
-dayindex = sortrows(unique(allindex(:,1:2), 'rows'),'descend');
+dayindex = sortrows(unique(allindex(:,1:2), 'rows'),'ascend');
 
 params.animal = dayindex(:,1);
 params.day = dayindex(:,2);
@@ -42,8 +42,8 @@ params.files = arrayfun(@(x) {allindex(allindex(:,1) == dayindex(x,1) & allindex
 %First, run the preCuration step. 
 %After manually curation the Kilosort2 output, run the postCuration step. 
 
-run.preCuration = 0; %write specificed files to .bin for Kilosort
-run.postCuration = 1; %get single unit times, get waveforms, and apply quality metrics
+run.preCuration = 1; %write specificed files to .bin for Kilosort
+run.postCuration = 0; %get single unit times, get waveforms, and apply quality metrics
 
 %% Set rewriting options
 % set these options to force the code to rewrite the files specified below.
@@ -52,7 +52,7 @@ run.postCuration = 1; %get single unit times, get waveforms, and apply quality m
 
 rewrite.eeg = 0;
 rewrite.wf = 0;
-rewrite.qualitymetrics = 1;
+rewrite.qualitymetrics = 0;
 
 %% Quality control thresholds
 % !!!!!! Do not change without notifying all users !!!!!!
