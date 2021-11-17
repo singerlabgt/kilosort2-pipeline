@@ -10,9 +10,13 @@
 % to use: copy expressions into kilosort 
 % NJ 11/16/21 - adapted Abby's channel map for SpikeGadgets system 
 
-fs = 30000; 
-numChan = 64; 
-connected = ones(numChan, 1);
+
+Nchannels = 64;
+hwchan = props.hw_chan;
+fs = props.sampRate;
+chanMap0ind = 0:Nchannels-1;
+chanMap = chanMap0ind + 1;
+connected = ones(Nchannels, 1);
 
 %% x coords
 %   contacts are in squares of 20um sides so distance horizontally in each row
@@ -92,21 +96,19 @@ xlim([-50 300])
 hold on; 
 text(xc,yc,num2str(chanMap0))
 
-%% rearrange chanMap (hwChan; 0-based) in the order of nTrodeID (1-64)
-temp = [xc, yc, kc, chanMap0]; 
-temp2 = nan(size(temp)); 
+%% rearrange chanMap (hwChan; 0-based) 
+% bc Nuri's nTrodeID 1-64 is organized from top to bottom, from left to right,
+% for both left and right shank 
+xyk0Ind = [xc, yc, kc, chanMap0]; 
 
-nTrodeID = 1:numChan; %goes from 1-64
-for nt = 1:length(nTrodeID)
-    idx = find(chanMap0 == nTrodeID(nt) - 1); 
-    temp2(nt,:) = temp(idx, :); 
+test = zeros(Nchannels,4);
+for ii = 1:Nchannels
+    a = find(hwchan == xyk0Ind(ii,4));
+    test(ii,:) = xyk0Ind(a,:);
 end
-xcoords = temp2(:,1); 
-ycoords = temp2(:,2); 
-kcoords = temp2(:,3); 
-chanMap0ind = temp2(:,4); 
-chanMap = chanMap0ind + 1; 
-
+xcoords = test(:,1);
+ycoords = test(:,2);
+kcoords = test(:,3);
 
 %% save the map 
 savedir = '\\ad.gatech.edu\bme\labs\singer\Nuri\Code\kilosort2-pipeline\kilosort2-pipeline';

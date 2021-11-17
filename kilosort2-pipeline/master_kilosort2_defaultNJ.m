@@ -38,10 +38,15 @@ for d = 1:size(sessions,1)
     rootBIN = fullfile(dirs.processeddatadir, [iden, num2str(index(1)) '_' num2str(index(2))], brainReg, 'sorted','kilosort');
     load(fullfile(rootBIN,'sortingprops.mat'))
     
+    %this script below makes new chanMap - only need to uncomment if the
+    %order of channel visualization or nTrode-hwChan relationship is
+    %changed. NJ 11/16/21
+    %script_make64chmap_A64Poly5_SpikeGadgets_200213; 
+    
     
     %% master-kilosort
     configFileNuri
-%     run(fullfile(pathToYourConfigFile, 'configFileNuri.m'));
+    %     run(fullfile(pathToYourConfigFile, 'configFileNuri.m'));
     ops.fproc       = fullfile(rootBIN, 'temp_wh.dat');    
     ops.trange = [0 Inf]; % time range to sort
     ops.NchanTOT    = 64; % total number of channels in your recording
