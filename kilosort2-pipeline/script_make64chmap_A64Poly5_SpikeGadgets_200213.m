@@ -95,11 +95,10 @@ text(xc,yc,num2str(chanMap0))
 %% rearrange chanMap (hwChan; 0-based) in the order of nTrodeID (1-64)
 temp = [xc, yc, kc, chanMap0]; 
 temp2 = nan(size(temp)); 
-chanMapspreadsheet = xlsread('\\ad.gatech.edu\bme\labs\singer\Rig\Probes\SpikeGadgets_A2x32Poly5_Mapping_200213.xlsx');
-nTrodeID = chanMapspreadsheet(:,end-1); %goes from 1-64
-hwChan = chanMapspreadsheet(:,end); %associated hwChan number ordered based on nTrode 1-64 
+
+nTrodeID = 1:numChan; %goes from 1-64
 for nt = 1:length(nTrodeID)
-    idx = find(chanMap0 == hwChan(nt)); 
+    idx = find(chanMap0 == nTrodeID(nt) - 1); 
     temp2(nt,:) = temp(idx, :); 
 end
 xcoords = temp2(:,1); 
