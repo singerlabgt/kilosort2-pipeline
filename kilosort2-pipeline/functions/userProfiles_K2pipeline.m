@@ -66,6 +66,30 @@ if strcmp(user, 'Steph')
     end
 end
 
+%%%%%%%%%%%%%%%%% ----- Teema ----- %%%%%%%%%%%%%%
+if strcmp(user, 'Teema')
+    if strcmp(project, 'UpdateTask')
+        params.animalID = 'S';
+        params.numShanks = 2;
+        params.probeChannels = {1:64,65:128}; %should be the 1 based indices of the channels in the data structure totalCh x samples
+        
+        %files for saving/loading data
+        dirs.rawdatadir = '\\neuro-cloud\labs\singer\RawData\UpdateTask\';
+        dirs.localclusterdir = 'C:\Users\tyassine3\Desktop\tempkilosort\'; %this may be the same as processeddatadir
+        dirs.remoteclusterdir = '\\neuro-cloud\labs\singer\ProcessedData\UpdateTask\';
+        dirs.processeddatadir = '\\neuro-cloud\labs\singer\ProcessedData\UpdateTask\'; %may be the same as above  
+        dirs.clusfolder = 'sorted\'; %subfolder that finished files will save into
+        dirs.spreadsheetdir = '\\neuro-cloud.ad.gatech.edu\labs\singer\Steph\Code\update-project\docs\metadata-summaries\VRUpdateTaskEphysSummary.xlsx';
+        dirs.remoteprecurationdir = '\\neuro-cloud\labs\singer\KilosortData\update-project\'; %folder for transferring data between computers, storing precurated data
+        
+        %files to add to path for kilosort sorting
+        dirs.kilosortdir = 'C:\Users\tyassine3\Documents\Kilosort-2.0';
+        dirs.npymatlabdir = 'C:\Users\tyassine3\Documents\npy-matlab-master\npy-matlab';
+        dirs.configfile = '\\neuro-cloud.ad.gatech.edu\labs\singer\Steph\Code\kilosort2-pipeline\kilosort2-pipeline\configFiles\StephUpdateTaskConfig.m';
+        dirs.channelmapfile = '\\neuro-cloud.ad.gatech.edu\labs\singer\Steph\Code\kilosort2-pipeline\kilosort2-pipeline\channelMaps\A64Poly5_SpikeGadgets_RigC_kilosortChanMap.mat';
+    end
+end
+
 %%%%%%%%%%%%%%%%% ----- New User ----- %%%%%%%%%%%%%%%
 
 if strcmp(user, 'NewUser')
