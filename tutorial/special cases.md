@@ -1,7 +1,7 @@
 # Special Cases and Questions for Kilosort Decisions
 
 ### 1. What happens when there is more than one similar unit when comparing?
-![Special Case 1](tutorial/images/specialcase_1_multiplemerge.png)
+![Special Case 1](images/specialcase_1_multiplemerge.png)
 
  * Compare them in sets of two as well as comparing them all together. 
  * If all of the units look good together, merge and compare to others.
