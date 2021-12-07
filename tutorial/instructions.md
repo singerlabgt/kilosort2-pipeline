@@ -1,7 +1,10 @@
 # Kilosort Instructions
-**This script is used to explain how to manually curate electrophysiological data using Kilosort.**
-## Schematic to Follow
-\*insert picture
+### This script is used to explain how to manually curate electrophysiological data using Kilosort.
+
+## Schematic to Follow:
+
+<img src="images/final spike sorting schematic.jpg" width="700px">
+
 ## Section 1: Browsing Through All Units
 ### Summary:
 The first step is to quickly browse through all the units and check the waveform view. 
