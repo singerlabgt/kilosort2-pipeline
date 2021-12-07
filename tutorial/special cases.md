@@ -24,8 +24,10 @@
 
 ### Example:
 
-*insert picture*
+<img src="images/specialcase_2_halfwshape.png" width="400px">
 
+   * Example description
+ 
 ## 3. What are bursting cells, what do they look like, and how do you analyze them?
 
 ### Summary:
@@ -38,6 +40,8 @@
 
 *insert picture*
 
+   * Example description
+ 
 ## 4. What happens when there is a clear refractory period, but only on one side of the CCG?
 
 ### Summary:
@@ -46,8 +50,10 @@
 
 ### Example:
 
-*insert picture*  
+<img src="images/specialcase_4_cliffCCG.png" width="300px">
 
+   * Example description
+ 
 ## 5. What happens when one of the units doesn't have enough spikes to show the CCG/ACG?
 
 ### Summary:
@@ -57,8 +63,10 @@
 
 ### Example:
 
-*insert picture*
+<img src="images/specialcase_5_noACG.png" width="700px">
 
+   * Example description
+ 
 ## 6. What happens when there is a large spike in the middle of a CCG but there is no other contamination in the gap?
 
 ### Summary:
@@ -69,4 +77,7 @@
 
 ### Example:
 
-*insert picture*
+<img src="images/specialcase_6_doublecount.png" width="700px">
+
+   * Example description
+ 
