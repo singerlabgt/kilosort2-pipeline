@@ -41,7 +41,7 @@ This next section is to check each individual unit and evaluate its features to 
 3. Check the Amplitude view. Does the amplitude of the unit (in color) separate out from the noise (grey)? Are there two separate clusters/chunks (MUA)?
     * Yes &rightarrow; Continue to next step
 	* No &rightarrow; Is the contamination easily removable?
-        * Yes &rightarrow; Try cutting it out and looking at the ACG by ___. If it shows a better refractory period, continue. If not, undo and throw out to MUA.
+        * Yes &rightarrow; Try cutting it out and looking at the ACG. (This is done by holding down the CRL button and clicking the area. Once there is a selection, press K.) If it shows a better refractory period, continue. If not, undo and throw out to MUA.
         * No &rightarrow; Throw out to MUA by pressing “Alt-M” or “option-M”
 
 
