@@ -13,7 +13,9 @@
 
 <img src="images/specialcase_1_multiplemerge.png" width="700px">
 
-   * Here,
+   * All of the CCG's have a gap in the middle, therefore showing a refractory period.
+   * The waveforms all look similar and the amplitude distributions are all similar.
+   * For this one, the decision was to merge all three units.
 
 
 ## 2. What happens when half of the channels show MUA but the other half look really nice?
@@ -26,7 +28,7 @@
 
 <img src="images/specialcase_2_halfwshape.png" width="400px">
 
-   * Example description
+   * In this photo, the main channel (10) doesn't have the "w" shape, so as long as all of the other features look good this would be marked good.
  
 ## 3. What are bursting cells, what do they look like, and how do you analyze them?
 
@@ -51,8 +53,6 @@
 ### Example:
 
 <img src="images/specialcase_4_cliffCCG.png" width="300px">
-
-   * Example description
  
 ## 5. What happens when one of the units doesn't have enough spikes to show the CCG/ACG?
 
@@ -64,8 +64,6 @@
 ### Example:
 
 <img src="images/specialcase_5_noACG.png" width="700px">
-
-   * Example description
  
 ## 6. What happens when there is a large spike in the middle of a CCG but there is no other contamination in the gap?
 
@@ -78,6 +76,3 @@
 ### Example:
 
 <img src="images/specialcase_6_doublecount.png" width="700px">
-
-   * Example description
- 
