@@ -14,7 +14,7 @@
 [params, dirs, th] = userProfiles_K2pipeline('Steph', 'UpdateTask');
 
 animals = [25];
-daysincl = [210913];
+daysincl = [210915];
 datesexcl = [nan];
 
 %get the animal info based on the inputs
@@ -30,8 +30,8 @@ run.preCuration = 0;            %write specificed files to .bin for Kilosort
 run.kilosortScript = 0;         %run kilosort spike sorting using main_kilosort script
 run.kilosortGUI = 0;            %run kilosort spike sorting using the gui
 run.transferPrecuratedData = 0; %automatically transfer precurated data to server, removes locally
-run.transferPostcuratedData = 0; %automatically transfer postcurated data to server, removes locally
-run.postCuration = 0;           %get single unit times, get waveforms, and apply quality metrics
+run.transferPostcuratedData = 1; %automatically transfer postcurated data to server, removes locally
+run.postCuration = 1;           %get single unit times, get waveforms, and apply quality metrics
 
 %% Set rewriting options
 % set these options to force the code to rewrite the files specified below.
@@ -48,7 +48,7 @@ for d = 1:size(sessions,1)
     params.files = sessionInfo(:,3);
     params.animal = sessionInfo(1,1);
     params.day =  sessionInfo(1,2);
-    params.brainReg = allindexT{allindexT.Date == params.day & allindexT.Recording == params.files(1),{'RegAB','RegCD'}};
+    params.brainReg = allindexT{allindexT.Animal == params.animal & allindexT.Date == params.day & allindexT.Recording == params.files(1),{'RegAB','RegCD'}};
     
     %% write raw recording files to BIN for kilosort2
     if run.preCuration
