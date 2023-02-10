@@ -40,9 +40,7 @@
 
 ### Example:
 
-*insert picture*
-
-   * Example description
+<img src="images/specialcase_3_burstycell.png" width="400px">
  
 ## 4. What happens when there is a clear refractory period, but only on one side of the CCG?
 
