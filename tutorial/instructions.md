@@ -67,7 +67,7 @@ Normal Waveform:
 
 Two Groups of Waveforms/Bursty Cell:
 
-*insert picture*
+<img src="images/specialcase_3_burstycell.png" width="250px">
 
 Normal Auto-Correlogram:
 
